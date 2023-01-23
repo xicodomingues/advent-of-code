@@ -1,7 +1,5 @@
 use itertools::Itertools;
 
-use crate::utils::load_file;
-
 #[derive(Debug, PartialEq, Clone, Copy)]
 enum Shape {
     Rock = 1,
@@ -38,7 +36,7 @@ impl From<&str> for Shape {
     }
 }
 
-fn parse(input: String, mapper: impl Fn(&str, &str) -> (Shape, Shape)) -> Vec<(Shape, Shape)> {
+fn parse(input: &str, mapper: impl Fn(&str, &str) -> (Shape, Shape)) -> Vec<(Shape, Shape)> {
     input.lines().into_iter().map(|x| {
         let (first, second) = x.split(' ').take(2).collect_tuple().unwrap();
         mapper(first, second)
@@ -54,7 +52,7 @@ fn score(entry: &(Shape, Shape)) -> i64 {
     points + (entry.1 as i64)
 }
 
-fn part1(input: String) -> i64 {
+pub fn part1(input: &str) -> i64 {
     parse(input, |other, me| { (Shape::from(other), Shape::from(me)) })
         .iter().map(score).sum()
 }
@@ -68,7 +66,7 @@ fn force_result(result: &str, other: Shape) -> Shape {
     }
 }
 
-fn part2(input: String) -> i64 {
+pub fn part2(input: &str) -> i64 {
     parse(input, |other, me| {
         let tmp = Shape::from(other);
         (tmp, force_result(me, tmp))
@@ -76,14 +74,7 @@ fn part2(input: String) -> i64 {
         .iter().map(score).sum()
 }
 
-pub fn run() {
-    println!("{}", part1(load_file("day2.txt")));
-    println!("{}", part2(load_file("day2.txt")));
-}
-
 #[test]
 fn test() {
-    assert_eq!(part1(load_file("test2.txt")), 15);
-    assert_eq!(part2(load_file("test2.txt")), 12);
+    crate::test_day!(2, 15, 12);
 }
-
