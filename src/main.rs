@@ -3,6 +3,7 @@
 mod utils;
 mod day1;
 mod day2;
+mod day3;
 
 macro_rules! run {
     ($day:ident) => {{
@@ -15,9 +16,14 @@ macro_rules! run {
     }};
 }
 
-fn main() {
+fn all() {
     run!(day1);
     run!(day2);
+    run!(day3);
+}
+
+fn main() {
+    run!(day3)
 }
 
 #[test]
