@@ -7,6 +7,12 @@ pub fn load_file(filename: &str) -> String {
 
 #[macro_export]
 macro_rules! test_day {
+    ( $day:literal, $first:literal) => {{
+        use $crate::utils::load_file;
+        let tmp = load_file(&format!("test{}.txt", $day));
+        assert_eq!(part1(&tmp), $first);
+    }};
+
     ( $day:literal, $first:literal, $second:literal) => {{
         use $crate::utils::load_file;
         let tmp = load_file(&format!("test{}.txt", $day));
