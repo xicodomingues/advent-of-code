@@ -15,7 +15,7 @@ lazy_static! {
     static ref MOVE_RE: Regex = Regex::new(r"([UDLR]) (\d+)").unwrap();
 }
 
-fn parse(input: &str) -> Vec<(Direction, u8)> {
+fn parse(input: &str) -> impl Iterator<Item=(Direction, u8)> + '_ {
     input.lines().filter_map(|line| {
         MOVE_RE.captures(line).and_then(|cap| {
             let steps = cap.get(2)?.as_str().parse().ok()?;
@@ -27,7 +27,7 @@ fn parse(input: &str) -> Vec<(Direction, u8)> {
                 _ => None
             }
         })
-    }).collect()
+    })
 }
 
 fn move_node(new: &(i32, i32), tail: &(i32, i32)) -> (i32, i32) {
@@ -62,8 +62,8 @@ fn update_propagation(rope: &Vec<(i32, i32)>, new_head: (i32, i32)) -> Vec<(i32,
 pub fn solve(input: &str, rope_size: usize) -> u64 {
     let mut rope = vec![(0,0); rope_size];
     let mut all_tail_positions = HashSet::new();
-    parse(input).iter().for_each(|(dir, steps)| {
-        for _ in 0..*steps {
+    parse(input).for_each(|(dir, steps)| {
+        for _ in 0..steps {
             let mut new_head = rope[0];
             match dir {
                 Up => new_head.1 += 1,
