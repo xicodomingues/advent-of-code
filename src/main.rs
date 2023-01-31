@@ -9,6 +9,7 @@ mod day5;
 mod day6;
 mod day7;
 mod day8;
+mod day9;
 
 macro_rules! run {
     ($day:ident) => {{
@@ -30,8 +31,9 @@ fn all() {
     run!(day6);
     run!(day7);
     run!(day8);
+    run!(day9);
 }
 
 fn main() {
-    run!(day8)
+    run!(day9)
 }
