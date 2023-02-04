@@ -1,5 +1,7 @@
 #![allow(dead_code)]
 
+extern crate core;
+
 mod utils;
 mod day1;
 mod day2;
@@ -11,6 +13,7 @@ mod day7;
 mod day8;
 mod day9;
 mod day10;
+mod day11;
 
 macro_rules! run {
     ($day:ident) => {{
@@ -34,8 +37,9 @@ fn all() {
     run!(day8);
     run!(day9);
     run!(day10);
+    run!(day11);
 }
 
 fn main() {
-    run!(day10)
+    run!(day11)
 }
