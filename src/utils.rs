@@ -20,3 +20,35 @@ macro_rules! test_day {
         assert_eq!(part2(&tmp), $second);
     }};
 }
+
+#[derive(Debug, Clone, Copy, Eq, Hash, PartialEq)]
+pub struct Point {
+    x: i32,
+    y: i32,
+}
+
+impl From<(i32, i32)> for Point {
+    fn from(value: (i32, i32)) -> Self {
+        Point { x: value.0, y: value.1 }
+    }
+}
+
+impl Point {
+    pub const ZERO: Point = Point { x: 0, y: 0 };
+    
+    pub fn up(&self) -> Self {
+        Point { x: self.x, y: self.y + 1 }
+    }
+    
+    pub fn down(&self) -> Self {
+        Point { x: self.x, y: self.y - 1 }
+    }
+    
+    pub fn left(&self) -> Self {
+        Point { x: self.x - 1, y: self.y }
+    }
+    
+    pub fn right(&self) -> Self {
+        Point { x: self.x + 1, y: self.y }
+    }
+}

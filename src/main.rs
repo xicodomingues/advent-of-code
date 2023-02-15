@@ -1,10 +1,11 @@
-#![allow(dead_code)]
+#![allow(dead_code, unused_imports)]
 
 extern crate core;
 
 mod utils;
 mod day1;
 mod day2;
+mod day3;
 
 macro_rules! run {
     ($day:ident) => {{
@@ -20,8 +21,9 @@ macro_rules! run {
 fn all() {
     run!(day1);
     run!(day2);
+    run!(day3);
 }
 
 fn main() {
-    run!(day2)
+    run!(day3)
 }

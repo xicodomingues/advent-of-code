@@ -1,8 +1,7 @@
+use crate::test_day;
 use itertools::Itertools;
 use lazy_static::lazy_static;
 use regex::{Regex, Match};
-
-use crate::test_day;
 
 lazy_static! {
     static ref BOX_REGEX: Regex = Regex::new(r"(\d+)x(\d+)x(\d+)").unwrap();
