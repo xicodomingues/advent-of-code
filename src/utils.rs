@@ -20,3 +20,22 @@ macro_rules! test_day {
         assert_eq!(part2(&tmp), $second);
     }};
 }
+
+/// Based on the dbg macro, but without pretty format and without return value
+#[macro_export]
+macro_rules! my_dbg {
+    () => {
+        eprintln!("[{}:{}]", file!(), line!())
+    };
+    ($val:expr $(,)?) => {
+        match $val {
+            tmp => {
+                eprintln!("[{}:{}] {} = {:?}",
+                    file!(), line!(), stringify!($val), &tmp);
+            }
+        }
+    };
+    ($($val:expr),+ $(,)?) => {
+        ($($crate::my_dbg!($val)),+,)
+    };
+}
