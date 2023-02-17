@@ -89,11 +89,6 @@ struct Pair {
     right: Entry,
 }
 
-struct PairIter<'a> {
-    pair: &'a Pair,
-    consumed: u8,
-}
-
 impl Pair {
     fn parse(lines: &str) -> Self {
         let mut content = lines.lines().map(|line| {

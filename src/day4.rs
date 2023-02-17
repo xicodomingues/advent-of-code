@@ -1,40 +1,38 @@
-use std::iter::Map;
 use std::ops::RangeInclusive;
-use std::str::Lines;
 use regex::{Captures, Regex};
 use lazy_static::lazy_static;
 
-type Rang = RangeInclusive<i64>;
+type IncRange = RangeInclusive<i64>;
 
 lazy_static! {
     static ref RE: Regex = Regex::new(r"(\d+)-(\d+),(\d+)-(\d+)").unwrap();
 }
 
-fn parse_line(line: &str) -> (Rang, Rang) {
+fn parse_line(line: &str) -> (IncRange, IncRange) {
     fn to_i64(groups: &Captures, i: usize) -> i64 {
         groups.get(i).unwrap().as_str().parse().unwrap()
     }
     let groups = RE.captures(line).unwrap();
-    let first = Rang::new(to_i64(&groups, 1), to_i64(&groups, 2));
-    let second = Rang::new(to_i64(&groups, 3), to_i64(&groups, 4));
+    let first = IncRange::new(to_i64(&groups, 1), to_i64(&groups, 2));
+    let second = IncRange::new(to_i64(&groups, 3), to_i64(&groups, 4));
     (first, second)
 }
 
-fn parse(input: &str) -> Map<Lines<'_>, fn(&str) -> (Rang, Rang)> {
+fn parse(input: &str) -> impl Iterator<Item=(IncRange, IncRange)> + '_ {
     input.lines().map(parse_line)
 }
 
-fn is_contained(pair: &(Rang, Rang)) -> bool {
+fn is_contained(pair: &(IncRange, IncRange)) -> bool {
     let (a, b) = pair;
     (a.contains(b.start()) && a.contains(b.end())) || (b.contains(a.start()) && b.contains(a.end()))
 }
 
-fn overlaps(pair: &(Rang, Rang)) -> bool {
+fn overlaps(pair: &(IncRange, IncRange)) -> bool {
     let (a, b) = pair;
     a.contains(b.start()) || b.contains(a.start())
 }
 
-fn solve(input: &str, f: fn(&(Rang, Rang)) -> bool) -> i64 {
+fn solve(input: &str, f: fn(&(IncRange, IncRange)) -> bool) -> i64 {
     parse(input).filter(f).count() as i64
 }
 

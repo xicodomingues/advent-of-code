@@ -2,6 +2,7 @@ use std::collections::HashSet;
 use lazy_static::lazy_static;
 use regex::Regex;
 use crate::day9::Direction::*;
+use crate::utils::Point;
 
 #[derive(Debug)]
 enum Direction {
@@ -30,17 +31,17 @@ fn parse(input: &str) -> impl Iterator<Item=(Direction, u8)> + '_ {
     })
 }
 
-fn move_node(new: &(i32, i32), tail: &(i32, i32)) -> (i32, i32) {
-    if (new.0 - tail.0).abs() <= 1 && (new.1 - tail.1).abs() <= 1 {
+fn move_node(new: &Point, tail: &Point) -> Point {
+    if new.square_dist(tail) <= 1 {
         return *tail
     }
-    let mut res = (0, 0);
-    res.0 = new.0 + match new.0 - tail.0 {
+    let mut res = *new;
+    res.x += match new.x - tail.x {
         2 => -1,
         -2 => 1,
         _ => 0,
     };
-    res.1 = new.1 + match new.1 - tail.1 {
+    res.y += match new.y - tail.y {
         2 => -1,
         -2 => 1,
         _ => 0,
@@ -50,8 +51,8 @@ fn move_node(new: &(i32, i32), tail: &(i32, i32)) -> (i32, i32) {
 
 // could be improved by not creating new Vec every iteration and do it in place,
 // but this is fast enough
-fn update_propagation(rope: &Vec<(i32, i32)>, new_head: (i32, i32)) -> Vec<(i32, i32)> {
-    let mut res = vec![(0,0); 10];
+fn update_propagation(rope: &Vec<Point>, new_head: Point) -> Vec<Point> {
+    let mut res = vec![Point::ZERO; 10];
     res[0] = new_head;
     for i in 1..rope.len() {
         res[i] = move_node(&res[i-1], &rope[i]);
@@ -60,17 +61,16 @@ fn update_propagation(rope: &Vec<(i32, i32)>, new_head: (i32, i32)) -> Vec<(i32,
 }
 
 pub fn solve(input: &str, rope_size: usize) -> u64 {
-    let mut rope = vec![(0,0); rope_size];
+    let mut rope = vec![Point::ZERO; rope_size];
     let mut all_tail_positions = HashSet::new();
     parse(input).for_each(|(dir, steps)| {
         for _ in 0..steps {
-            let mut new_head = rope[0];
-            match dir {
-                Up => new_head.1 += 1,
-                Down => new_head.1 -= 1,
-                Left => new_head.0 -= 1,
-                Right => new_head.0 += 1,
-            }
+            let new_head =  match dir {
+                Up => rope[0].up(),
+                Down => rope[0].down(),
+                Left => rope[0].left(),
+                Right => rope[0].right(),
+            };
             rope = update_propagation(&rope, new_head);
             all_tail_positions.insert(rope[rope_size-1]);
         }
@@ -88,5 +88,6 @@ pub fn part2(input: &str) -> u64 {
 
 #[test]
 fn test() {
+    assert_eq!(part1("R 4\nU 4\nL 3\nD 1\nR 4\nD 1\nL 5\nR 2"), 13);
     crate::test_day!(9, 88, 36)
 }

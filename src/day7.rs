@@ -79,7 +79,7 @@ impl FileSizes {
 
     fn add_file(&mut self, curr_dir: &str, name: String, size: u64) {
         let complete = join_dir(curr_dir, &name);
-        self.size_map.insert(complete.to_string(), size);
+        self.size_map.insert(complete, size);
         self.dir_map.entry(curr_dir.to_string()).or_default().insert(name);
     }
 

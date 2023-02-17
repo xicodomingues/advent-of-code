@@ -10,3 +10,4 @@ itertools = "0.10"
 regex = "1"
 lazy_static = "1"
 snafu = { version = "0.7", features = ["backtraces"] }
+grid = "0.9"
