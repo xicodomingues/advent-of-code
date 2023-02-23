@@ -1,4 +1,4 @@
-#![allow(dead_code, unused_imports)]
+#![allow(dead_code)]
 
 extern crate core;
 
@@ -27,5 +27,5 @@ fn all() {
 }
 
 fn main() {
-    run!(day4)
+    run!(day4);
 }

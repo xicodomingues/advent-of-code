@@ -1,4 +1,3 @@
-use crate::test_day;
 use itertools::Itertools;
 use lazy_static::lazy_static;
 use regex::{Regex, Match};
@@ -61,5 +60,5 @@ fn test() {
 	assert_eq!(get_ribbon_area((2, 3, 4)), 34);
 	assert_eq!(get_ribbon_area((1, 1, 10)), 14);
 	
-    test_day!(2, 101, 48)
+    crate::test_day!(2, 101, 48)
 }
