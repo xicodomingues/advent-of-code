@@ -1,0 +1,6 @@
+# aoc-2015
+Advent of code of 2015 implemented in Rust
+
+I'm basically doing it in parallel with the 2022. Maybe I should merge the repos...
+
+In the future...
