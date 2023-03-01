@@ -1,6 +1,6 @@
 use std::cmp::max;
 use std::fs;
-use std::ops::{Index, IndexMut};
+use std::ops::{Index, IndexMut, Deref, DerefMut};
 
 use grid::Grid;
 
@@ -115,11 +115,23 @@ impl Point {
     }
 }
 
-pub trait InGrid {
-    fn contains(&self, point: &Point) -> bool;
+pub struct MyGrid<T>(pub Grid<T>);
+
+impl<T> Deref for MyGrid<T> {
+    type Target = Grid<T>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
 }
 
-impl<T> InGrid for Grid<T> {
+impl<T> DerefMut for MyGrid<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.0
+    }
+}
+
+impl<T> MyGrid<T> {
     fn contains(&self, point: &Point) -> bool {
         point.x >= 0
             && point.y >= 0
@@ -128,16 +140,31 @@ impl<T> InGrid for Grid<T> {
     }
 }
 
-impl<T> Index<Point> for Grid<T> {
+impl<T> Index<Point> for MyGrid<T> {
     type Output = T;
 
     fn index(&self, index: Point) -> &Self::Output {
-        &self[index.x as usize][index.y as usize]
+        &self.0[index.y as usize][index.x as usize]
     }
 }
 
-impl<T> IndexMut<Point> for Grid<T> {
+impl<T> IndexMut<Point> for MyGrid<T> {
     fn index_mut(&mut self, index: Point) -> &mut Self::Output {
-        &mut self[index.x as usize][index.y as usize]
+        &mut self.0[index.y as usize][index.x as usize]
+    }
+}
+
+
+impl<T> Index<(isize, isize)> for MyGrid<T> {
+    type Output = T;
+
+    fn index(&self, index: (isize, isize)) -> &Self::Output {
+        &self.0[index.0 as usize][index.1 as usize]
+    }
+}
+
+impl<T> IndexMut<(isize, isize)> for MyGrid<T> {
+    fn index_mut(&mut self, index: (isize, isize)) -> &mut Self::Output {
+        &mut self.0[index.0 as usize][index.1 as usize]
     }
 }
