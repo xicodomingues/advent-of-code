@@ -21,8 +21,8 @@ fn has_letter_twice_in_row(input: &str) -> bool {
     input.chars().tuple_windows::<(_, _)>().any(|(a, b)| a == b)
 }
 
-fn has_forbidden_pairs(input: &str) -> bool {
-    input
+fn has_no_forbidden_pairs(input: &str) -> bool {
+    !input
         .chars()
         .tuple_windows::<(_, _)>()
         .any(|pair| FORBIDDEN_SET.contains(&pair))
@@ -49,22 +49,21 @@ fn has_tripplet_letters(input: &str) -> bool {
     tripplets.any(|(a, _, b)| a == b)
 }
 
-pub fn part1(input: &str) -> usize {
+fn solve(input: &str, functions: Vec<fn(&str) -> bool>) -> usize {
     input
         .lines()
         .filter(|line| {
-            has_3_diff_vowels(line) && has_letter_twice_in_row(line) && !has_forbidden_pairs(line)
+            functions.iter().all(|func| func(line))
         })
         .count()
 }
 
+pub fn part1(input: &str) -> usize {
+    solve(input, vec![has_3_diff_vowels, has_letter_twice_in_row, has_no_forbidden_pairs])
+}
+
 pub fn part2(input: &str) -> usize {
-    input
-        .lines()
-        .filter(|line| {
-            pair_appears_twice(line) && has_tripplet_letters(line)
-        })
-        .count()
+    solve(input, vec![pair_appears_twice, has_tripplet_letters])
 }
 
 #[test]
