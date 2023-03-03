@@ -10,18 +10,30 @@ pub fn load_file(filename: &str) -> String {
 }
 
 #[macro_export]
-macro_rules! test_day {
-    ($day:literal, $first:expr) => {{
+macro_rules! test_year_day {
+    ($year:literal, $day:literal, $first:expr) => {{
         use $crate::utils::load_file;
-        let tmp = load_file(&format!("test{}.txt", $day));
+        let tmp = load_file(&format!("{}/test_files/test{}.txt", $year, $day));
         assert_eq!(part1(&tmp), $first);
     }};
 
-    ($day:literal, $first:expr, $second:expr) => {{
+    ($year:literal, $day:literal, $first:expr, $second:expr) => {{
         use $crate::utils::load_file;
-        let tmp = load_file(&format!("test{}.txt", $day));
+        let tmp = load_file(&format!("{}/test_files/test{}.txt", $year, $day));
         assert_eq!(part1(&tmp), $first);
         assert_eq!(part2(&tmp), $second);
+    }};
+}
+
+#[macro_export]
+macro_rules! run_year {
+    ($year:literal, $day:ident) => {{
+        use $crate::utils::load_file;
+        let tmp = load_file(&format!("{}/{}.txt", $year, stringify!($day)));
+        println!("Day {}", stringify!($day).strip_prefix("day").unwrap());
+        println!("Part 1: {}", $day::part1(&tmp));
+        println!("Part 2: {}", $day::part2(&tmp));
+        println!();
     }};
 }
 

@@ -144,5 +144,5 @@ pub fn part2(input: &str) -> u64 {
 
 #[test]
 fn test() {
-    crate::test_day!(7, 95437, 24933642)
+    crate::test_2022!(7, 95437, 24933642)
 }

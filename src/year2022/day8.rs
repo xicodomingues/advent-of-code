@@ -55,5 +55,5 @@ pub fn part2(input: &str) -> usize {
 
 #[test]
 fn test() {
-    crate::test_day!(8, 21, 8)
+    crate::test_2022!(8, 21, 8)
 }

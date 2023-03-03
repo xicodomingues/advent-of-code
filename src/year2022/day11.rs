@@ -173,5 +173,5 @@ pub fn part2(input: &str) -> usize {
 
 #[test]
 fn test() {
-    crate::test_day!(11, 10605, 2713310158)
+    crate::test_2022!(11, 10605, 2713310158)
 }

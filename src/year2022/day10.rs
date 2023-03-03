@@ -1,6 +1,6 @@
 use itertools::enumerate;
 
-use crate::day10::Operation::*;
+use crate::year2022::day10::Operation::*;
 
 #[derive(Debug)]
 enum Operation {
@@ -66,7 +66,7 @@ pub fn part2(input: &str) -> String {
 
 #[test]
 fn test() {
-    crate::test_day!(10, 13140, ("
+    crate::test_2022!(10, 13140, ("
 ##..##..##..##..##..##..##..##..##..##..
 ###...###...###...###...###...###...###.
 ####....####....####....####....####....

@@ -46,5 +46,5 @@ pub fn part2(input: &str) -> i64 {
 
 #[test]
 fn test() {
-    crate::test_day!(4, 2, 4);
+    crate::test_2022!(4, 2, 4);
 }

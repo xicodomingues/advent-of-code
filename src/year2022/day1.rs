@@ -29,5 +29,5 @@ pub fn part2(input: &str) -> i64 {
 #[test]
 fn test() {
     assert_eq!(part1("100\n200\n\n400"), 400);
-    crate::test_day!(1, 24000, 45000)
+    crate::test_2022!(1, 24000, 45000)
 }

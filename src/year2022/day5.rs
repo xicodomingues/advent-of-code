@@ -118,5 +118,5 @@ pub fn part2(input: &str) -> String {
 
 #[test]
 fn test() {
-    crate::test_day!(5, "CMZ", "MCD");
+    crate::test_2022!(5, "CMZ", "MCD");
 }

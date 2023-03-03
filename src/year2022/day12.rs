@@ -95,5 +95,5 @@ pub fn part2(input: &str) -> u16 {
 
 #[test]
 fn test() {
-    crate::test_day!(12, 31, 29)
+    crate::test_2022!(12, 31, 29)
 }
