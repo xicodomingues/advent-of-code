@@ -1,10 +1,11 @@
+use std::str::FromStr;
+
 use grid::Grid;
 use itertools::Itertools;
 use lazy_static::lazy_static;
 use regex::{Match, Regex};
-use std::str::FromStr;
 
-use crate::{utils::{MyGrid, Point}, my_dbg};
+use crate::utils::{MyGrid, Point};
 
 lazy_static! {
     static ref COORDS_REGEX: Regex = Regex::new(r"(\d+),(\d+) through (\d+),(\d+)").unwrap();
@@ -71,7 +72,7 @@ trait ExecInstruction {
 
 impl ExecInstruction for MyGrid<bool> {
     fn exec(&mut self, instruction: Instruction) {
-        fn coords_iter(coords: Coords) -> impl Iterator<Item = (isize, isize)> {
+        fn coords_iter(coords: Coords) -> impl Iterator<Item=(isize, isize)> {
             (coords.top.y..=coords.bottom.y).cartesian_product(coords.top.x..=coords.bottom.x)
         }
         match instruction {
@@ -100,5 +101,5 @@ pub fn part2(input: &str) -> usize {
 
 #[test]
 fn test() {
-    crate::test_day!(6, 1_000_000 - 1000 - 4)
+    crate::test_2015!(6, 1_000_000 - 1000 - 4)
 }
