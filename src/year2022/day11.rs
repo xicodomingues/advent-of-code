@@ -152,7 +152,6 @@ fn solve(input: &str, loops: usize, worry_divisor: u64) -> usize {
     let all_monkeys_modulo: u64 = monkeys.iter().map(|m| m.test_val).product();
     for _ in 0..loops {
         for monkey in 0..monkeys.len() {
-
             while let Some(item) = monkeys[monkey].queue.pop_front() {
                 let (target, val) = monkeys[monkey].inspect(item, worry_divisor);
                 monkeys[target].queue.push_back(val % all_monkeys_modulo);

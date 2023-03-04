@@ -1,6 +1,7 @@
 use std::ops::RangeInclusive;
-use regex::{Captures, Regex};
+
 use lazy_static::lazy_static;
+use regex::{Captures, Regex};
 
 type IncRange = RangeInclusive<i64>;
 

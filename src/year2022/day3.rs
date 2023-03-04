@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+
 use itertools::Itertools;
 
 fn to_set(data: &str) -> HashSet<char> {

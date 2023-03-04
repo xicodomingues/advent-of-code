@@ -1,5 +1,6 @@
 use std::cmp::Ordering;
 use std::iter::once;
+
 use itertools::Itertools;
 
 #[derive(Debug, Clone)]
@@ -128,7 +129,7 @@ pub fn part2(input: &str) -> usize {
         .flat_map(|p| [p.left, p.right])
         .sorted()
         .enumerate()
-        .filter(|(_, entry)| entry == &divider.left || entry == &divider.right )
+        .filter(|(_, entry)| entry == &divider.left || entry == &divider.right)
         .map(|(i, _)| i + 1)
         .product()
 }

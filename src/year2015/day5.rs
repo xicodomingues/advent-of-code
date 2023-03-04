@@ -1,6 +1,7 @@
+use std::collections::{HashMap, HashSet};
+
 use itertools::Itertools;
 use lazy_static::lazy_static;
-use std::collections::{HashMap, HashSet};
 
 lazy_static! {
     static ref FORBIDDEN_SET: HashSet<(char, char)> =
@@ -39,14 +40,14 @@ fn pair_appears_twice(input: &str) -> bool {
                     list.push(i)
                 }
             })
-            .or_insert(vec![i]);
+            .or_insert_with(|| vec![i]);
     }
     positions.values().any(|list| list.len() >= 2)
 }
 
-fn has_tripplet_letters(input: &str) -> bool {
-    let mut tripplets = input.chars().tuple_windows::<(_, _, _)>();
-    tripplets.any(|(a, _, b)| a == b)
+fn has_triplet_letters(input: &str) -> bool {
+    let mut triplets = input.chars().tuple_windows::<(_, _, _)>();
+    triplets.any(|(a, _, b)| a == b)
 }
 
 fn solve(input: &str, functions: Vec<fn(&str) -> bool>) -> usize {
@@ -63,7 +64,7 @@ pub fn part1(input: &str) -> usize {
 }
 
 pub fn part2(input: &str) -> usize {
-    solve(input, vec![pair_appears_twice, has_tripplet_letters])
+    solve(input, vec![pair_appears_twice, has_triplet_letters])
 }
 
 #[test]

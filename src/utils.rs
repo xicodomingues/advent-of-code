@@ -1,6 +1,6 @@
 use std::cmp::max;
 use std::fs;
-use std::ops::{Index, IndexMut, Deref, DerefMut};
+use std::ops::{Deref, DerefMut, Index, IndexMut};
 
 use grid::Grid;
 

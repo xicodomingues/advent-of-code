@@ -1,5 +1,5 @@
-use std::collections::HashMap;
 use std::collections::hash_map::Entry;
+use std::collections::HashMap;
 
 fn solve(input: &str, buffer_size: usize) -> i64 {
     let chars: Vec<char> = input.chars().collect();

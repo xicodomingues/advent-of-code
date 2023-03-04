@@ -1,4 +1,3 @@
-
 #[macro_export]
 macro_rules! test_2015 {
     ($day:literal, $($params:expr),+) => {$crate::test_year_day!(2015, $day, $($params),+)};

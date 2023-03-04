@@ -73,7 +73,7 @@ fn parse(input: &str) -> (Crates, Vec<Move>) {
 
 impl Crates {
     fn move_crate(&mut self, mv: &Move) {
-        let Move {n, from, to} = mv;
+        let Move { n, from, to } = mv;
         for _ in 0..*n {
             let to_move = self.stacks[from - 1].pop_back().unwrap();
             self.stacks[to - 1].push_back(to_move);
@@ -81,7 +81,7 @@ impl Crates {
     }
 
     fn move_all_crates(&mut self, mv: &Move) {
-        let Move {n, from, to} = mv;
+        let Move { n, from, to } = mv;
         let mut to_move = VecDeque::new();
         for _ in 0..*n {
             to_move.push_front(self.stacks[from - 1].pop_back().unwrap());

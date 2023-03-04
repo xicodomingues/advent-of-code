@@ -1,8 +1,8 @@
 use std::collections::VecDeque;
-use grid::Grid;
 
+use grid::Grid;
 use itertools::iproduct;
-use crate::my_dbg;
+
 use crate::utils::{MyGrid, Point};
 
 #[derive(Debug)]
@@ -69,7 +69,7 @@ fn get_cost_map(map: &Map) -> MyGrid<u16> {
     while let Some((next, current_cost)) = to_analyze.pop_front() {
         get_neighbours(next, map).for_each(|point| {
             let new_cost = current_cost + 1;
-            if can_move(map, next, point) && new_cost < cost[point]  {
+            if can_move(map, next, point) && new_cost < cost[point] {
                 cost[point] = new_cost;
                 to_analyze.push_back((point, new_cost));
             }

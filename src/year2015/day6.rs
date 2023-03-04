@@ -92,10 +92,10 @@ pub fn part1(input: &str) -> usize {
             Ok(inst) => grid.exec(inst),
             _ => panic!("Faulty instruction"),
         });
-    grid.iter().filter(|x| **x == true).count()
+    grid.iter().filter(|x| **x).count()
 }
 
-pub fn part2(input: &str) -> usize {
+pub fn part2(_input: &str) -> usize {
     0
 }
 
