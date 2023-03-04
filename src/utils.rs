@@ -127,6 +127,7 @@ impl Point {
     }
 }
 
+#[derive(Debug)]
 pub struct MyGrid<T>(pub Grid<T>);
 
 impl<T> Deref for MyGrid<T> {
@@ -144,11 +145,11 @@ impl<T> DerefMut for MyGrid<T> {
 }
 
 impl<T> MyGrid<T> {
-    fn contains(&self, point: &Point) -> bool {
+    pub fn contains(&self, point: &Point) -> bool {
         point.x >= 0
             && point.y >= 0
-            && (point.x as usize) < self.rows()
-            && (point.y as usize) < self.cols()
+            && (point.x as usize) < self.cols()
+            && (point.y as usize) < self.rows()
     }
 }
 
@@ -166,7 +167,6 @@ impl<T> IndexMut<Point> for MyGrid<T> {
     }
 }
 
-
 impl<T> Index<(isize, isize)> for MyGrid<T> {
     type Output = T;
 
@@ -178,5 +178,19 @@ impl<T> Index<(isize, isize)> for MyGrid<T> {
 impl<T> IndexMut<(isize, isize)> for MyGrid<T> {
     fn index_mut(&mut self, index: (isize, isize)) -> &mut Self::Output {
         &mut self.0[index.0 as usize][index.1 as usize]
+    }
+}
+
+impl<T> Index<(usize, usize)> for MyGrid<T> {
+    type Output = T;
+
+    fn index(&self, index: (usize, usize)) -> &Self::Output {
+        &self.0[index.0][index.1]
+    }
+}
+
+impl<T> IndexMut<(usize, usize)> for MyGrid<T> {
+    fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
+        &mut self.0[index.0][index.1]
     }
 }

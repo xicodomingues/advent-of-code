@@ -2,36 +2,37 @@ use std::collections::VecDeque;
 use grid::Grid;
 
 use itertools::iproduct;
-use crate::utils::{InGrid, Point};
+use crate::my_dbg;
+use crate::utils::{MyGrid, Point};
 
 #[derive(Debug)]
 struct Map {
     width: usize,
     height: usize,
-    content: Grid<u8>,
+    content: MyGrid<u8>,
     start: Point,
     end: Point,
 }
 
-impl InGrid for Map {
+impl Map {
     fn contains(&self, point: &Point) -> bool {
         self.content.contains(point)
     }
 }
 
 fn parse(input: &str) -> Map {
-    let mut grid: Grid<u8> = Grid::new(0, 0);
+    let mut grid: MyGrid<u8> = MyGrid(Grid::new(0, 0));
     let mut start = None;
     let mut end = None;
     for (r, line) in input.lines().enumerate() {
         grid.push_row(line.chars().enumerate().map(|(c, char)| {
             match char {
                 'S' => {
-                    start = Some(Point::from((r, c)));
+                    start = Some(Point::from((c, r)));
                     1
                 }
                 'E' => {
-                    end = Some(Point::from((r, c)));
+                    end = Some(Point::from((c, r)));
                     26
                 }
                 'a'..='z' => char as u8 - b'a' + 1,
@@ -59,8 +60,8 @@ fn can_move(map: &Map, current: Point, next: Point) -> bool {
     from <= to + 1
 }
 
-fn get_cost_map(map: &Map) -> Grid<u16> {
-    let mut cost: Grid<u16> = Grid::init(map.height, map.width, u16::MAX);
+fn get_cost_map(map: &Map) -> MyGrid<u16> {
+    let mut cost: MyGrid<u16> = MyGrid(Grid::init(map.height, map.width, u16::MAX));
     let mut to_analyze = VecDeque::new();
     to_analyze.push_back((map.end, 0));
     cost[map.end] = 0;
@@ -87,7 +88,6 @@ pub fn part2(input: &str) -> u16 {
     let map = parse(input);
     let cost = get_cost_map(&map);
     iproduct!(0..map.height, 0..map.width)
-        .map(Point::from)
         .filter(|point| map.content[*point] == 1)
         .map(|point| cost[point])
         .min().expect("There should be min")
