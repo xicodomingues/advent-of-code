@@ -5,14 +5,11 @@ use itertools::Itertools;
 use lazy_static::lazy_static;
 use regex::{Match, Regex};
 
-use crate::utils::{MyGrid, Point};
+use crate::utils::{MyGrid, ParseError, Point};
 
 lazy_static! {
     static ref COORDS_REGEX: Regex = Regex::new(r"(\d+),(\d+) through (\d+),(\d+)").unwrap();
 }
-
-#[derive(Debug)]
-struct ParseError;
 
 #[derive(Debug)]
 struct Coords {

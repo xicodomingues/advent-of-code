@@ -1,6 +1,8 @@
 use std::cmp::max;
 use std::fs;
+use std::num::ParseIntError;
 use std::ops::{Deref, DerefMut, Index, IndexMut};
+use std::str::FromStr;
 
 use grid::Grid;
 
@@ -29,11 +31,14 @@ macro_rules! test_year_day {
 macro_rules! run_year {
     ($year:literal, $day:ident) => {{
         use $crate::utils::load_file;
+        use std::time::Instant;
+
         let tmp = load_file(&format!("{}/{}.txt", $year, stringify!($day)));
         println!("Day {}", stringify!($day).strip_prefix("day").unwrap());
+        let before = Instant::now();
         println!("Part 1: {}", $day::part1(&tmp));
         println!("Part 2: {}", $day::part2(&tmp));
-        println!();
+        println!("Took: {:.2?}", before.elapsed());
     }};
 }
 
@@ -41,23 +46,31 @@ macro_rules! run_year {
 #[macro_export]
 macro_rules! my_dbg {
     () => {
-        eprintln!("[{}:{}]", file!(), line!());
+        eprintln!("[{}:{}]", file!(), line!())
     };
     ($val:expr $(,)?) => {
         match $val {
             tmp => {
                 eprintln!("[{}:{}] {} = {:?}",
-                    file!(), line!(), stringify!($val), &tmp);
+                    file!(), line!(), stringify!($val), &tmp)
             }
-        };
+        }
     };
     ($($val:expr),+ $(,)?) => {
-        ($($crate::my_dbg!($val)),+,);
+        ($($crate::my_dbg!($val)),+,)
     };
 }
 
+#[derive(Debug)]
+pub struct ParseError;
 
-#[derive(Debug, Clone, Copy, Eq, Hash, PartialEq)]
+impl From<ParseIntError> for ParseError {
+    fn from(_source: ParseIntError) -> Self {
+        ParseError
+    }
+}
+
+#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
 pub struct Point {
     pub(crate) x: isize,
     pub(crate) y: isize,
@@ -66,6 +79,12 @@ pub struct Point {
 impl From<(isize, isize)> for Point {
     fn from(value: (isize, isize)) -> Self {
         Point { x: value.0, y: value.1 }
+    }
+}
+
+impl From<(i32, i32)> for Point {
+    fn from(value: (i32, i32)) -> Self {
+        Point { x: value.0 as isize, y: value.1 as isize }
     }
 }
 
@@ -81,28 +100,40 @@ impl From<(usize, usize)> for Point {
 impl Point {
     pub const ZERO: Point = Point { x: 0, y: 0 };
 
+    pub fn new(x: isize, y: isize) -> Self {
+        Point { x, y }
+    }
+
+    pub fn row(&self) -> isize {
+        self.y
+    }
+
+    pub fn col(&self) -> isize {
+        self.x
+    }
+
     pub fn up(&self) -> Self {
-        Point { x: self.x, y: self.y + 1 }
-    }
-
-    pub fn up_left(&self) -> Self {
-        Point { x: self.x - 1, y: self.y + 1 }
-    }
-
-    pub fn up_right(&self) -> Self {
-        Point { x: self.x + 1, y: self.y + 1 }
-    }
-
-    pub fn down(&self) -> Self {
         Point { x: self.x, y: self.y - 1 }
     }
 
-    pub fn down_left(&self) -> Self {
+    pub fn up_left(&self) -> Self {
         Point { x: self.x - 1, y: self.y - 1 }
     }
 
-    pub fn down_right(&self) -> Self {
+    pub fn up_right(&self) -> Self {
         Point { x: self.x + 1, y: self.y - 1 }
+    }
+
+    pub fn down(&self) -> Self {
+        Point { x: self.x, y: self.y + 1 }
+    }
+
+    pub fn down_left(&self) -> Self {
+        Point { x: self.x - 1, y: self.y + 1 }
+    }
+
+    pub fn down_right(&self) -> Self {
+        Point { x: self.x + 1, y: self.y + 1 }
     }
 
     pub fn left(&self) -> Self {
@@ -127,6 +158,22 @@ impl Point {
     }
 }
 
+impl FromStr for Point {
+    type Err = ParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let coords: Vec<&str> = s.split(',').collect();
+        assert_eq!(coords.len(), 2);
+        Ok(Point {
+            x: coords[0].parse()?,
+            y: coords[1].parse()?,
+        })
+    }
+}
+
+/// Structure that represents a grid of stuff.
+///
+/// The top left corner is `(0, 0)` and bottom left is `(width, height)`
 #[derive(Debug)]
 pub struct MyGrid<T>(pub Grid<T>);
 
