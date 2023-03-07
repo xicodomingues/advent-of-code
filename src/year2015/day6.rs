@@ -44,39 +44,32 @@ impl FromStr for Coords {
 
 #[derive(Debug)]
 enum Instruction {
-    TurnOn(Coords),
-    TurnOff(Coords),
-    Toggle(Coords),
+    TurnOn,
+    TurnOff,
+    Toggle,
 }
 
 impl FromStr for Instruction {
     type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let coords = Coords::from_str(s)?;
         match s {
-            x if x.starts_with("turn on") => Ok(Self::TurnOn(coords)),
-            x if x.starts_with("turn off") => Ok(Self::TurnOff(coords)),
-            x if x.starts_with("toggle") => Ok(Self::Toggle(coords)),
+            x if x.starts_with("turn on") => Ok(Self::TurnOn),
+            x if x.starts_with("turn off") => Ok(Self::TurnOff),
+            x if x.starts_with("toggle") => Ok(Self::Toggle),
             _ => Err(ParseError),
         }
     }
 }
 
-trait ExecInstruction {
-    fn exec(&mut self, instruction: Instruction);
+trait ExecInstruction<T> {
+    fn exec(&mut self, coords: Coords, make_change: impl Fn(&T) -> T);
 }
 
-impl ExecInstruction for MyGrid<bool> {
-    fn exec(&mut self, instruction: Instruction) {
-        fn coords_iter(coords: Coords) -> impl Iterator<Item=(isize, isize)> {
-            (coords.top.y..=coords.bottom.y).cartesian_product(coords.top.x..=coords.bottom.x)
-        }
-        match instruction {
-            Instruction::TurnOn(coords) => coords_iter(coords).for_each(|p| self[p] = true),
-            Instruction::TurnOff(coords) => coords_iter(coords).for_each(|p| self[p] = false),
-            Instruction::Toggle(coords) => coords_iter(coords).for_each(|p| self[p] = !self[p]),
-        }
+impl<T> ExecInstruction<T> for MyGrid<T> {
+    fn exec(&mut self, coords: Coords, make_change: impl Fn(&T) -> T) {
+        (coords.top.y..=coords.bottom.y).cartesian_product(coords.top.x..=coords.bottom.x)
+            .for_each(|p| self[p] = make_change(&self[p]));
     }
 }
 
@@ -84,19 +77,41 @@ pub fn part1(input: &str) -> usize {
     let mut grid: MyGrid<bool> = MyGrid(Grid::new(1000, 1000));
     input
         .lines()
-        .map(Instruction::from_str)
-        .for_each(|instruction| match instruction {
-            Ok(inst) => grid.exec(inst),
+        .map(|line| (Instruction::from_str(line), Coords::from_str(line)))
+        .for_each(|info| match info {
+            (Ok(inst), Ok(coords)) => grid.exec(coords, |x| {
+                match inst {
+                    Instruction::TurnOff => false,
+                    Instruction::TurnOn => true,
+                    Instruction::Toggle => !x,
+                }
+            }),
             _ => panic!("Faulty instruction"),
         });
     grid.iter().filter(|x| **x).count()
 }
 
-pub fn part2(_input: &str) -> usize {
-    0
+pub fn part2(input: &str) -> usize {
+    let mut grid: MyGrid<usize> = MyGrid(Grid::new(1000, 1000));
+    input
+        .lines()
+        .map(|line| (Instruction::from_str(line), Coords::from_str(line)))
+        .for_each(|info| match info {
+            (Ok(inst), Ok(coords)) => grid.exec(coords, |x| {
+                match inst {
+                    Instruction::TurnOff => if x > &1 {x - 1} else {0},
+                    Instruction::TurnOn => x + 1,
+                    Instruction::Toggle => x + 2,
+                }
+            }),
+            _ => panic!("Faulty instruction"),
+        });
+    grid.iter().sum()
 }
 
 #[test]
 fn test() {
-    crate::test_2015!(6, 1_000_000 - 1000 - 4)
+    assert_eq!(part2("turn on 0,0 through 0,0"), 1);
+    assert_eq!(part2("toggle 0,0 through 999,999"), 2_000_000);
+    crate::test_2015!(6, 1_000_000 - 1000 - 4, 1_000_000 + 2*1000 - 4)
 }

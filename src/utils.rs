@@ -34,7 +34,7 @@ macro_rules! run_year {
         use std::time::Instant;
 
         let tmp = load_file(&format!("{}/{}.txt", $year, stringify!($day)));
-        println!("Day {}", stringify!($day).strip_prefix("day").unwrap());
+        println!("Day {} - {}", stringify!($day).strip_prefix("day").unwrap(), $year);
         let before = Instant::now();
         println!("Part 1: {}", $day::part1(&tmp));
         println!("Part 2: {}", $day::part2(&tmp));

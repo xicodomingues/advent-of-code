@@ -7,5 +7,5 @@ mod year2015;
 mod year2022;
 
 fn main() {
-    year2022::run();
+    year2015::run();
 }
