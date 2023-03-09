@@ -38,7 +38,7 @@ impl FromStr for Coords {
                     _ => None,
                 },
             )
-            .ok_or(ParseError)
+            .ok_or(ParseError::new("Impossible to parse Coords"))
     }
 }
 
@@ -57,7 +57,7 @@ impl FromStr for Instruction {
             x if x.starts_with("turn on") => Ok(Self::TurnOn),
             x if x.starts_with("turn off") => Ok(Self::TurnOff),
             x if x.starts_with("toggle") => Ok(Self::Toggle),
-            _ => Err(ParseError),
+            _ => Err(ParseError::new("Unrecognized instruction")),
         }
     }
 }

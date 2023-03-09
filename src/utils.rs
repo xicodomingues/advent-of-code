@@ -11,17 +11,22 @@ pub fn load_file(filename: &str) -> String {
         .expect("Should have been able to read the file")
 }
 
+pub fn load_test_file(year: usize, day: usize) -> String {
+    fs::read_to_string(format!("data/{}/test_files/test{}.txt", year, day))
+        .expect("Should have been able to read the file")
+}
+
 #[macro_export]
 macro_rules! test_year_day {
     ($year:literal, $day:literal, $first:expr) => {{
-        use $crate::utils::load_file;
-        let tmp = load_file(&format!("{}/test_files/test{}.txt", $year, $day));
+        use $crate::utils::load_test_file;
+        let tmp = load_test_file($year, $day);
         assert_eq!(part1(&tmp), $first);
     }};
 
     ($year:literal, $day:literal, $first:expr, $second:expr) => {{
-        use $crate::utils::load_file;
-        let tmp = load_file(&format!("{}/test_files/test{}.txt", $year, $day));
+        use $crate::utils::load_test_file;
+        let tmp = load_test_file($year, $day);
         assert_eq!(part1(&tmp), $first);
         assert_eq!(part2(&tmp), $second);
     }};
@@ -34,7 +39,7 @@ macro_rules! run_year {
         use std::time::Instant;
 
         let tmp = load_file(&format!("{}/{}.txt", $year, stringify!($day)));
-        println!("Day {} - {}", stringify!($day).strip_prefix("day").unwrap(), $year);
+        println!("Day {} of {}", stringify!($day).strip_prefix("day").unwrap(), $year);
         let before = Instant::now();
         println!("Part 1: {}", $day::part1(&tmp));
         println!("Part 2: {}", $day::part2(&tmp));
@@ -62,11 +67,19 @@ macro_rules! my_dbg {
 }
 
 #[derive(Debug)]
-pub struct ParseError;
+pub struct ParseError {
+    message: String,
+}
+
+impl ParseError {
+    pub fn new(message: &str) -> Self {
+        ParseError { message: message.to_string() }
+    }
+}
 
 impl From<ParseIntError> for ParseError {
     fn from(_source: ParseIntError) -> Self {
-        ParseError
+        ParseError::new(&_source.to_string())
     }
 }
 
