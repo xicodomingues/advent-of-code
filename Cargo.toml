@@ -12,3 +12,4 @@ lazy_static = "1"
 snafu = { version = "0.7", features = ["backtraces"] }
 md5 = "0.7"
 grid = "0.9"
+serde = "1"
