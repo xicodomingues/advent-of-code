@@ -12,14 +12,12 @@ pub fn part1(input: &str) -> i64 {
     map_to_vals(input).sum()
 }
 
-pub fn part2(input: &str) -> i64 {
+pub fn part2(input: &str) -> usize {
     let mut sum = 0;
-    let mut i = 0;
-    for v in map_to_vals(input) {
+    for (i, v) in map_to_vals(input).enumerate() {
         sum += v;
-        i += 1;
         if sum == -1 {
-            return i;
+            return i + 1;
         }
     }
     panic!("It should never reach this point");
