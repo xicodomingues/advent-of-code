@@ -165,6 +165,17 @@ impl Point {
             self.right(),
         ]
     }
+    
+    pub fn all_neighbors(&self) -> Vec<Self> {
+        let mut res = self.neighbors();
+        res.extend(vec![
+            self.up_left(),
+            self.up_right(),
+            self.down_left(),
+            self.down_right(),
+        ]);
+        res
+    }
 
     pub fn square_dist(&self, other: &Point) -> isize {
         max((self.x - other.x).abs(), (self.y - other.y).abs())
@@ -187,7 +198,6 @@ impl FromStr for Point {
 /// Structure that represents a grid of stuff.
 ///
 /// The top left corner is `(0, 0)` and bottom left is `(width, height)`
-#[derive(Debug)]
 pub struct MyGrid<T>(pub Grid<T>);
 
 impl<T> Deref for MyGrid<T> {
@@ -253,4 +263,22 @@ impl<T> IndexMut<(usize, usize)> for MyGrid<T> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
         &mut self.0[index.0][index.1]
     }
+}
+
+impl<T> core::fmt::Debug for MyGrid<T> 
+where 
+    T: core::fmt::Debug
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f)?;
+        for r in 0..self.rows() {
+            write!(f, "{} ", r)?;
+            for c in 0..self.cols() {
+                write!(f, "{:?}", self.0[r as usize][c as usize])?
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+    
 }
