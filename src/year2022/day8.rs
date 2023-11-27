@@ -12,7 +12,7 @@ fn parse_forest(input: &str) -> Grid<u8> {
 }
 
 fn is_visible_from_outside(forest: &Grid<u8>, (r, c): (usize, usize)) -> bool {
-    let height = forest[r][c];
+    let height = forest[(r,c)];
     let to_up = forest.iter_col(c).take(r).all(|x| *x < height);
     let to_down = forest.iter_col(c).skip(r + 1).all(|x| *x < height);
     let to_left = forest.iter_row(r).take(c).all(|x| *x < height);
@@ -38,7 +38,7 @@ fn get_taller_pos<'a>(mut iter: impl Iterator<Item=&'a u8>, height: u8, default:
 // scan each direction until a same size tree or taller shows up.
 // if none shows up return max distance
 fn get_hidden_space(forest: &Grid<u8>, (r, c): (usize, usize)) -> usize {
-    let height = forest[r][c];
+    let height = forest[(r, c)];
     let to_up = get_taller_pos(forest.iter_col(c).take(r).rev(), height, r);
     let to_down = get_taller_pos(forest.iter_col(c).skip(r + 1), height, forest.rows() - 1 - r);
     let to_left = get_taller_pos(forest.iter_row(r).take(c).rev(), height, c);

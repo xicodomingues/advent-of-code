@@ -227,13 +227,13 @@ impl<T> Index<Point> for MyGrid<T> {
     type Output = T;
 
     fn index(&self, index: Point) -> &Self::Output {
-        &self.0[index.y as usize][index.x as usize]
+        &self.0[(index.y as usize, index.x as usize)]
     }
 }
 
 impl<T> IndexMut<Point> for MyGrid<T> {
     fn index_mut(&mut self, index: Point) -> &mut Self::Output {
-        &mut self.0[index.y as usize][index.x as usize]
+        &mut self.0[(index.y as usize, index.x as usize)]
     }
 }
 
@@ -241,13 +241,13 @@ impl<T> Index<(isize, isize)> for MyGrid<T> {
     type Output = T;
 
     fn index(&self, index: (isize, isize)) -> &Self::Output {
-        &self.0[index.0 as usize][index.1 as usize]
+        &self.0[(index.0 as usize, index.1 as usize)]
     }
 }
 
 impl<T> IndexMut<(isize, isize)> for MyGrid<T> {
     fn index_mut(&mut self, index: (isize, isize)) -> &mut Self::Output {
-        &mut self.0[index.0 as usize][index.1 as usize]
+        &mut self.0[(index.0 as usize, index.1 as usize)]
     }
 }
 
@@ -255,13 +255,13 @@ impl<T> Index<(usize, usize)> for MyGrid<T> {
     type Output = T;
 
     fn index(&self, index: (usize, usize)) -> &Self::Output {
-        &self.0[index.0][index.1]
+        &self.0[index]
     }
 }
 
 impl<T> IndexMut<(usize, usize)> for MyGrid<T> {
     fn index_mut(&mut self, index: (usize, usize)) -> &mut Self::Output {
-        &mut self.0[index.0][index.1]
+        &mut self.0[index]
     }
 }
 
@@ -274,11 +274,10 @@ where
         for r in 0..self.rows() {
             write!(f, "{} ", r)?;
             for c in 0..self.cols() {
-                write!(f, "{:?}", self.0[r as usize][c as usize])?
+                write!(f, "{:?}", self.0[(r as usize, c as usize)])?
             }
             writeln!(f)?;
         }
         Ok(())
     }
-    
 }

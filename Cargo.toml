@@ -6,12 +6,12 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-itertools = "0.10"
+itertools = "0.12"
 regex = "1"
 lazy_static = "1"
 snafu = { version = "0.7", features = ["backtraces"] }
 md5 = "0.7"
-grid = "0.9"
+grid = "0.12"
 serde = "1.0"
 serde_json = "1.0"
 rayon = "1.7"

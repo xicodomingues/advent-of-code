@@ -224,7 +224,7 @@ impl Debug for SandPit {
         for r in self.bounds.top..self.bounds.bottom {
             write!(f, "{} ", r)?;
             for c in self.bounds.left..self.bounds.right {
-                write!(f, "{}", match self.grid.0[r as usize][c as usize] {
+                write!(f, "{}", match self.grid.0[(r as usize, c as usize)] {
                     Content::Air => '.',
                     Content::Rock => '#',
                     Content::Sand => '0',
