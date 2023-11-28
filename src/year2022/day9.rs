@@ -3,22 +3,15 @@ use std::collections::HashSet;
 use lazy_static::lazy_static;
 use regex::Regex;
 
+use crate::utils::Direction;
+use crate::utils::Direction::*;
 use crate::utils::Point;
-use crate::year2022::day9::Direction::*;
-
-#[derive(Debug)]
-enum Direction {
-    Up,
-    Down,
-    Left,
-    Right,
-}
 
 lazy_static! {
     static ref MOVE_RE: Regex = Regex::new(r"([UDLR]) (\d+)").unwrap();
 }
 
-fn parse(input: &str) -> impl Iterator<Item=(Direction, u8)> + '_ {
+fn parse(input: &str) -> impl Iterator<Item = (Direction, u8)> + '_ {
     input.lines().filter_map(|line| {
         MOVE_RE.captures(line).and_then(|cap| {
             let steps = cap.get(2)?.as_str().parse().ok()?;
@@ -27,7 +20,7 @@ fn parse(input: &str) -> impl Iterator<Item=(Direction, u8)> + '_ {
                 "D" => Some((Down, steps)),
                 "L" => Some((Left, steps)),
                 "R" => Some((Right, steps)),
-                _ => None
+                _ => None,
             }
         })
     })

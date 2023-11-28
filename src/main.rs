@@ -4,8 +4,9 @@ extern crate core;
 
 mod utils;
 mod year2015;
+mod year2021;
 mod year2022;
 
 fn main() {
-    year2015::run();
+    year2021::run();
 }

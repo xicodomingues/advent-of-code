@@ -44,6 +44,7 @@ macro_rules! run_year {
         println!("Part 1: {}", $day::part1(&tmp));
         println!("Part 2: {}", $day::part2(&tmp));
         println!("Took: {:.2?}", before.elapsed());
+        println!();
     }};
 }
 
@@ -81,6 +82,14 @@ impl From<ParseIntError> for ParseError {
     fn from(_source: ParseIntError) -> Self {
         ParseError::new(&_source.to_string())
     }
+}
+
+#[derive(Debug)]
+pub enum Direction {
+    Up,
+    Down,
+    Left,
+    Right,
 }
 
 #[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
@@ -197,7 +206,7 @@ impl FromStr for Point {
 
 /// Structure that represents a grid of stuff.
 ///
-/// The top left corner is `(0, 0)` and bottom left is `(width, height)`
+/// The top left corner is `(0, 0)` and bottom right is `(width, height)`
 pub struct MyGrid<T>(pub Grid<T>);
 
 impl<T> Deref for MyGrid<T> {

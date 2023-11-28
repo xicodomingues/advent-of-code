@@ -26,7 +26,7 @@ macro_rules! run {
     ($day:ident) => {$crate::run_year!(2015, $day)};
 }
 
-fn all() {
+pub fn all() {
     run!(day1);
     run!(day2);
     run!(day3);
