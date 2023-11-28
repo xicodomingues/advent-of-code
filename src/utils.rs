@@ -35,11 +35,15 @@ macro_rules! test_year_day {
 #[macro_export]
 macro_rules! run_year {
     ($year:literal, $day:ident) => {{
-        use $crate::utils::load_file;
         use std::time::Instant;
+        use $crate::utils::load_file;
 
         let tmp = load_file(&format!("{}/{}.txt", $year, stringify!($day)));
-        println!("Day {} of {}", stringify!($day).strip_prefix("day").unwrap(), $year);
+        println!(
+            "Day {} of {}",
+            stringify!($day).strip_prefix("day").unwrap(),
+            $year
+        );
         let before = Instant::now();
         println!("Part 1: {}", $day::part1(&tmp));
         println!("Part 2: {}", $day::part2(&tmp));
@@ -74,7 +78,9 @@ pub struct ParseError {
 
 impl ParseError {
     pub fn new(message: &str) -> Self {
-        ParseError { message: message.to_string() }
+        ParseError {
+            message: message.to_string(),
+        }
     }
 }
 
@@ -84,12 +90,37 @@ impl From<ParseIntError> for ParseError {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Direction {
     Up,
     Down,
     Left,
     Right,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum Rotation {
+    Clockwise,
+    AntiClockwise,
+}
+
+impl Direction {
+    pub fn rotate(&self, way: Rotation) -> Direction {
+        match way {
+            Rotation::Clockwise => match self {
+                Self::Up => Self::Right,
+                Self::Right => Self::Down,
+                Self::Down => Self::Left,
+                Self::Left => Self::Up,
+            },
+            Rotation::AntiClockwise => match self {
+                Self::Up => Self::Left,
+                Self::Right => Self::Up,
+                Self::Down => Self::Right,
+                Self::Left => Self::Down,
+            },
+        }
+    }
 }
 
 #[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
@@ -100,13 +131,19 @@ pub struct Point {
 
 impl From<(isize, isize)> for Point {
     fn from(value: (isize, isize)) -> Self {
-        Point { x: value.0, y: value.1 }
+        Point {
+            x: value.0,
+            y: value.1,
+        }
     }
 }
 
 impl From<(i32, i32)> for Point {
     fn from(value: (i32, i32)) -> Self {
-        Point { x: value.0 as isize, y: value.1 as isize }
+        Point {
+            x: value.0 as isize,
+            y: value.1 as isize,
+        }
     }
 }
 
@@ -119,11 +156,22 @@ impl From<(usize, usize)> for Point {
     }
 }
 
+/// The vertical axis gets positive the more down it goes.
+/// The (0, 0) is at the top left corner
+///
+///             Up(-)
+///              ^
+///              |
+///  left(-) <-- x --> Right(+)
+///              |
+///              v
+///            Down(+)
+///
 impl Point {
-    pub const ZERO: Point = Point { x: 0, y: 0 };
+    pub const ZERO: Self = Self { x: 0, y: 0 };
 
     pub fn new(x: isize, y: isize) -> Self {
-        Point { x, y }
+        Self { x, y }
     }
 
     pub fn row(&self) -> isize {
@@ -135,46 +183,65 @@ impl Point {
     }
 
     pub fn up(&self) -> Self {
-        Point { x: self.x, y: self.y - 1 }
+        Self {
+            x: self.x,
+            y: self.y - 1,
+        }
     }
 
     pub fn up_left(&self) -> Self {
-        Point { x: self.x - 1, y: self.y - 1 }
+        Self {
+            x: self.x - 1,
+            y: self.y - 1,
+        }
     }
 
     pub fn up_right(&self) -> Self {
-        Point { x: self.x + 1, y: self.y - 1 }
+        Self {
+            x: self.x + 1,
+            y: self.y - 1,
+        }
     }
 
     pub fn down(&self) -> Self {
-        Point { x: self.x, y: self.y + 1 }
+        Self {
+            x: self.x,
+            y: self.y + 1,
+        }
     }
 
     pub fn down_left(&self) -> Self {
-        Point { x: self.x - 1, y: self.y + 1 }
+        Self {
+            x: self.x - 1,
+            y: self.y + 1,
+        }
     }
 
     pub fn down_right(&self) -> Self {
-        Point { x: self.x + 1, y: self.y + 1 }
+        Self {
+            x: self.x + 1,
+            y: self.y + 1,
+        }
     }
 
     pub fn left(&self) -> Self {
-        Point { x: self.x - 1, y: self.y }
+        Self {
+            x: self.x - 1,
+            y: self.y,
+        }
     }
 
     pub fn right(&self) -> Self {
-        Point { x: self.x + 1, y: self.y }
+        Self {
+            x: self.x + 1,
+            y: self.y,
+        }
     }
 
     pub fn neighbors(&self) -> Vec<Self> {
-        vec![
-            self.up(),
-            self.down(),
-            self.left(),
-            self.right(),
-        ]
+        vec![self.up(), self.down(), self.left(), self.right()]
     }
-    
+
     pub fn all_neighbors(&self) -> Vec<Self> {
         let mut res = self.neighbors();
         res.extend(vec![
@@ -186,8 +253,48 @@ impl Point {
         res
     }
 
+    pub fn move1(&self, dir: Direction) -> Self {
+        Self {
+            x: self.x
+                + match dir {
+                    Direction::Left => -1,
+                    Direction::Right => 1,
+                    _ => 0,
+                },
+            y: self.y
+                + match dir {
+                    Direction::Down => 1,
+                    Direction::Up => -1,
+                    _ => 0,
+                },
+        }
+    }
+
+    pub fn move_in(&self, dir: Direction, amount: isize) -> Self {
+        Self {
+            x: self.x
+                + amount
+                    * match dir {
+                        Direction::Left => -1,
+                        Direction::Right => 1,
+                        _ => 0,
+                    },
+            y: self.y
+                + amount
+                    * match dir {
+                        Direction::Down => 1,
+                        Direction::Up => -1,
+                        _ => 0,
+                    },
+        }
+    }
+
     pub fn square_dist(&self, other: &Point) -> isize {
         max((self.x - other.x).abs(), (self.y - other.y).abs())
+    }
+
+    pub fn manhathan_dist(&self, other: &Point) -> isize {
+        (self.x - other.x).abs() + (self.y - other.y).abs()
     }
 }
 
@@ -274,9 +381,9 @@ impl<T> IndexMut<(usize, usize)> for MyGrid<T> {
     }
 }
 
-impl<T> core::fmt::Debug for MyGrid<T> 
-where 
-    T: core::fmt::Debug
+impl<T> core::fmt::Debug for MyGrid<T>
+where
+    T: core::fmt::Debug,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f)?;
