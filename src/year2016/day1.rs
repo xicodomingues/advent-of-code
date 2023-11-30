@@ -28,7 +28,7 @@ pub fn part1(input: &str) -> isize {
     let mut dir = Direction::Up;
     for Turn { r, n } in parse(input) {
         dir = dir.rotate(r);
-        pos = pos.move_in(dir, n as isize);
+        pos = pos.move_in(&dir, n as isize);
     }
     pos.manhathan_dist(&Point::ZERO)
 }
@@ -41,7 +41,7 @@ pub fn part2(input: &str) -> isize {
     'outer: for Turn { r, n } in parse(input) {
         dir = dir.rotate(r);
         for _ in 0..n {
-            pos = pos.move1(dir);
+            pos = pos.move1(&dir);
             if visited.contains(&pos) {
                 break 'outer;
             }

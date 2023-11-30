@@ -253,24 +253,7 @@ impl Point {
         res
     }
 
-    pub fn move1(&self, dir: Direction) -> Self {
-        Self {
-            x: self.x
-                + match dir {
-                    Direction::Left => -1,
-                    Direction::Right => 1,
-                    _ => 0,
-                },
-            y: self.y
-                + match dir {
-                    Direction::Down => 1,
-                    Direction::Up => -1,
-                    _ => 0,
-                },
-        }
-    }
-
-    pub fn move_in(&self, dir: Direction, amount: isize) -> Self {
+    pub fn move_in(&self, dir: &Direction, amount: isize) -> Self {
         Self {
             x: self.x
                 + amount
@@ -287,6 +270,10 @@ impl Point {
                         _ => 0,
                     },
         }
+    }
+
+    pub fn move1(&self, dir: &Direction) -> Self {
+        self.move_in(dir, 1)
     }
 
     pub fn square_dist(&self, other: &Point) -> isize {
@@ -316,6 +303,15 @@ impl FromStr for Point {
 /// The top left corner is `(0, 0)` and bottom right is `(width, height)`
 pub struct MyGrid<T>(pub Grid<T>);
 
+impl<T: Default> MyGrid<T> {
+    pub fn contains(&self, point: &Point) -> bool {
+        point.x >= 0
+            && point.y >= 0
+            && (point.x as usize) < self.cols()
+            && (point.y as usize) < self.rows()
+    }
+}
+
 impl<T> Deref for MyGrid<T> {
     type Target = Grid<T>;
 
@@ -327,15 +323,6 @@ impl<T> Deref for MyGrid<T> {
 impl<T> DerefMut for MyGrid<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
-    }
-}
-
-impl<T> MyGrid<T> {
-    pub fn contains(&self, point: &Point) -> bool {
-        point.x >= 0
-            && point.y >= 0
-            && (point.x as usize) < self.cols()
-            && (point.y as usize) < self.rows()
     }
 }
 
