@@ -65,7 +65,7 @@ fn parse(input: &str) -> Vec<Reindeer> {
     res.unwrap()
 }
 
-fn max_indexes(v: &Vec<u32>) -> impl Iterator<Item=usize> + '_ {
+fn max_indexes(v: &[u32]) -> impl Iterator<Item=usize> + '_ {
     let max = v.iter().max().unwrap();
     v.iter().positions(move |x| x == max)
 }

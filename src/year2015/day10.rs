@@ -5,17 +5,17 @@ fn apply_step(input: &[u8]) -> Vec<u8> {
     while i < input.len() {
         match (input.get(i), input.get(i+1), input.get(i+2)) {
             (Some(a), Some(b), Some(c)) if a == b && b == c => {
-                res.push('3' as u8);
+                res.push(b'3');
                 res.push(*a);
                 i += 2;
             },
             (Some(a), Some(b), _) if a == b => {
-                res.push('2' as u8);
+                res.push(b'2');
                 res.push(*a);
                 i += 1;
             },
             (Some(a), _, _) => {
-                res.push('1' as u8);
+                res.push(b'1');
                 res.push(*a);
             },
             _ => {}

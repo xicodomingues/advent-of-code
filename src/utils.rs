@@ -377,7 +377,7 @@ where
         for r in 0..self.rows() {
             write!(f, "{} ", r)?;
             for c in 0..self.cols() {
-                write!(f, "{:?}", self.0[(r as usize, c as usize)])?
+                write!(f, "{:?}", self.0[(r, c)])?
             }
             writeln!(f)?;
         }

@@ -41,7 +41,7 @@ fn calculate_cost(edges: &Edges, perm: Vec<u32>) -> Option<u32> {
 
 fn get_costs(input: &str) -> impl Iterator<Item=u32> {
     let (nodes, edges) = parse(input);
-    (0 as u32..nodes.len() as u32).permutations(nodes.len())
+    (0_u32..nodes.len() as u32).permutations(nodes.len())
         .filter_map(move |perm| calculate_cost(&edges, perm))
 }
 

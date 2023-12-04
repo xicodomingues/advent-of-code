@@ -92,7 +92,7 @@ impl Lights {
 
     fn part2_tick(&mut self) {
         self.tick();
-        self.grid[(0 as isize, 0)] = Light::On;
+        self.grid[(0_isize, 0)] = Light::On;
         self.grid[(self.height - 1, 0)] = Light::On;
         self.grid[(0, self.width - 1)] = Light::On;
         self.grid[(self.height - 1, self.width - 1)] = Light::On;

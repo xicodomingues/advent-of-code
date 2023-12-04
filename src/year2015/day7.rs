@@ -41,7 +41,7 @@ impl FromStr for Input {
     type Err = ParseError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        if s.chars().all(|c| c.is_digit(10)) {
+        if s.chars().all(|c| c.is_ascii_digit()) {
             Ok(Input::Value(s.parse()?))
         } else {
             Ok(Input::Gate(s.to_owned()))
@@ -99,7 +99,7 @@ impl Wires {
         let mut gates: HashMap<String, Gate> = HashMap::new();
 
         input.lines().for_each(|line| {
-            let tokens = line.split(" ").collect::<Vec<_>>();
+            let tokens = line.split(' ').collect::<Vec<_>>();
             if tokens.len() == 3 {
                 assert_eq!(tokens[1], "->");
                 gates.insert(tokens[2].to_owned(), Gate::assign(tokens[0]));
@@ -131,13 +131,13 @@ impl Wires {
                     let res = self
                         .gates
                         .get(id)
-                        .and_then(|gate_info| {
+                        .map(|gate_info| {
                             let inputs: Vec<u16> = gate_info
                                 .inputs
                                 .iter()
                                 .map(|x| self._get_gate_val_memo(x, memo))
                                 .collect();
-                            Some(gate_info.op.exec(inputs))
+                            gate_info.op.exec(inputs)
                         })
                         .unwrap();
                     memo.insert(id.to_owned(), res);

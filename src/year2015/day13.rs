@@ -18,7 +18,7 @@ fn parse(input: &str) -> (Nodes, Edges) {
             }
         });
     input.lines().for_each(|line| {
-        let seq = line.strip_suffix(".").unwrap().split_whitespace().collect::<Vec<_>>();
+        let seq = line.strip_suffix('.').unwrap().split_whitespace().collect::<Vec<_>>();
         let edge1 = *nodes.get(seq[0]).unwrap();
         let edge2 = *nodes.get(seq[10]).unwrap();
         let cost = match seq[2] {

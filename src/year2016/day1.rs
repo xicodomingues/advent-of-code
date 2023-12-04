@@ -9,15 +9,15 @@ struct Turn {
 }
 
 fn parse(input: &str) -> impl Iterator<Item = Turn> + '_ {
-    input.split(",").map(|it| {
+    input.split(',').map(|it| {
         let d = it.trim().bytes().next().unwrap();
         let n = it.trim()[1..].parse().unwrap();
         match d {
             b'L' => Turn {
                 r: AntiClockwise,
-                n: n,
+                n,
             },
-            b'R' => Turn { r: Clockwise, n: n },
+            b'R' => Turn { r: Clockwise, n },
             _ => panic!("unknown turn"),
         }
     })

@@ -20,7 +20,7 @@ fn parse_line(line: &str) -> Vec<Direction> {
 }
 
 fn parse(input: &str) -> Vec<Vec<Direction>> {
-    input.lines().map(|line| parse_line(line)).collect()
+    input.lines().map(parse_line).collect()
 }
 
 struct Keyboard {

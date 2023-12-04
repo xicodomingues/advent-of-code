@@ -12,7 +12,7 @@ fn fill(containers: &[u32], to_fill: u32) -> Vec<Vec<u32>> {
     if to_fill == 0 {
         return vec![vec![]];
     }
-    if containers.len() == 0 {
+    if containers.is_empty() {
         return vec![];
     }
     let mut res = vec![];

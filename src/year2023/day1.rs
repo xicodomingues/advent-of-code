@@ -6,23 +6,19 @@ lazy_static! {
     static ref NUMBER_RE_REV: Regex = Regex::new(r"\d|enin|thgie|neves|xis|evif|ruof|eerht|owt|eno").unwrap();
 }
 
-fn is_digit(c: char) -> bool { 
-    c.is_digit(10)
-}
-
 fn get_calibration(line: &str) -> u32 {
-    let pos1 = line.find(is_digit).unwrap();
+    let pos1 = line.find(|c: char| c.is_ascii_digit()).unwrap();
     let mut res = line.chars().nth(pos1).unwrap().to_digit(10).unwrap() * 10;
     
-    let pos2 = line.rfind(is_digit).unwrap();
+    let pos2 = line.rfind(|c: char| c.is_ascii_digit()).unwrap();
     res += line.chars().nth(pos2).unwrap().to_digit(10).unwrap();
-    return res
+    res
 }
 
 
 fn to_number(nbrstr: &str) -> u32 {
     let first_char = nbrstr.chars().next().unwrap();
-    if first_char.is_digit(10) {
+    if first_char.is_ascii_digit() {
         return first_char.to_digit(10).unwrap();
     }
     match nbrstr {

@@ -71,12 +71,12 @@ fn get_oxigen(entries: Vec<Vec<u8>>, i: usize, f: fn(&Counter) -> u8) -> Vec<u8>
     let valid_entries: Vec<_> = entries
         .iter()
         .filter(|x| x[i] == f(&counter))
-        .map(|x| x.clone())
+        .cloned()
         .collect();
     if valid_entries.len() <= 1 {
         return valid_entries[0].clone();
     }
-    return get_oxigen(valid_entries, i + 1, f);
+    get_oxigen(valid_entries, i + 1, f)
 }
 
 pub fn part2(input: &str) -> u32 {

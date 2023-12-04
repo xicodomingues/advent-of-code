@@ -27,7 +27,7 @@ impl FromStr for Ingredients {
     type Err = ParseError;
 
     fn from_str(line: &str) -> Result<Self, Self::Err> {
-        let helper = line.replace(",", "");
+        let helper = line.replace(',', "");
         let seq = helper.split_whitespace().collect::<Vec<_>>();
         Ok(Ingredients {
             cap: seq[2].parse()?,
@@ -52,7 +52,7 @@ macro_rules! sum_prop {
     }};
 }
 
-fn apply_sum(sum: (i64, i64, i64, i64), ing: &Vec<Ingredients>) -> i64 {
+fn apply_sum(sum: (i64, i64, i64, i64), ing: &[Ingredients]) -> i64 {
     let cap = sum_prop!(cap, ing, sum);
     let dur = sum_prop!(dur, ing, sum);
     let fla = sum_prop!(fla, ing, sum);
@@ -60,7 +60,7 @@ fn apply_sum(sum: (i64, i64, i64, i64), ing: &Vec<Ingredients>) -> i64 {
     cap * dur * fla * tex
 }
 
-fn is_500(sum: (i64, i64, i64, i64), ing: &Vec<Ingredients>) -> bool {
+fn is_500(sum: (i64, i64, i64, i64), ing: &[Ingredients]) -> bool {
     sum_prop!(cal, ing, sum) == 500
 }
 

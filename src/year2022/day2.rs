@@ -37,7 +37,7 @@ impl From<&str> for Shape {
 }
 
 fn parse(input: &str, mapper: impl Fn(&str, &str) -> (Shape, Shape)) -> Vec<(Shape, Shape)> {
-    input.lines().into_iter().map(|x| {
+    input.lines().map(|x| {
         let (first, second) = x.split(' ').take(2).collect_tuple().unwrap();
         mapper(first, second)
     }).collect()

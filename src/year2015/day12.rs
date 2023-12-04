@@ -7,7 +7,7 @@ pub fn find_nums(val: &Value) -> i64 {
         Value::Bool(_) => 0,
         Value::Number(x) => x.as_i64().unwrap(),
         Value::String(_) => 0,
-        Value::Array(a) => a.iter().map(|v| find_nums(v)).sum(),
+        Value::Array(a) => a.iter().map(find_nums).sum(),
         Value::Object(obj) => {
             if obj.iter().any(|(_, v)| v.as_str() == Some("red")) {
                 0

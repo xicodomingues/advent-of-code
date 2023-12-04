@@ -4,7 +4,7 @@ use itertools::Itertools;
 
 fn is_valid_pass(pass: &[u8]) -> bool {
     let increasing = pass.iter().tuple_windows::<(_, _, _)>().any(|(a, b, c)| *a + 1 == *b && *b + 1 == *c);
-    let no_iol = pass.iter().all(|x| *x != 'i' as u8 && *x != 'o' as u8 && *x != 'l' as u8);
+    let no_iol = pass.iter().all(|x| *x != b'i' && *x != b'o' && *x != b'l');
     let pairs = 2 <= HashSet::<(&u8, &u8)>::from_iter(pass.iter().tuple_windows::<(_, _)>().filter(|(a, b)| a == b)).len();
     increasing && no_iol && pairs
 }
@@ -13,11 +13,11 @@ fn next_pass(pass: &mut Vec<u8>) {
     let mut pos = (pass.len() - 1) as isize;
     while pos >= 0 {
         let c = pass[pos as usize];
-        if c != 'z' as u8 {
+        if c != b'z' {
             pass[pos as usize] = c + 1;
             break;
         } else {
-            pass[pos as usize] = 'a' as u8;
+            pass[pos as usize] = b'a';
         }
         pos -= 1;
     }

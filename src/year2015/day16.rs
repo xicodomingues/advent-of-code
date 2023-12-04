@@ -132,7 +132,7 @@ impl FromStr for Sue {
     type Err = ParseError;
 
     fn from_str(line: &str) -> Result<Self, Self::Err> {
-        let helper = line.replace(",", "").replace(":", "");
+        let helper = line.replace([',', ':'], "");
         let seq = helper.split_whitespace().collect::<Vec<_>>();
         let mut sue = Sue::new(seq[1].parse()?);
         sue.set_prop(seq[2], seq[3].parse()?);
