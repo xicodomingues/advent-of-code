@@ -5,7 +5,6 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::str::FromStr;
 
 use grid::Grid;
-use itertools::Itertools;
 
 pub fn load_file(filename: &str) -> String {
     fs::read_to_string("data/".to_string() + filename)
@@ -53,7 +52,7 @@ macro_rules! run_year {
     }};
 }
 
-/// Based on the dbg macro, but without pretty format and without return value
+/// Based on the dbg macro, but without pretty format
 #[macro_export]
 macro_rules! my_dbg {
     () => {
@@ -63,7 +62,8 @@ macro_rules! my_dbg {
         match $val {
             tmp => {
                 eprintln!("[{}:{}] {} = {:?}",
-                    file!(), line!(), stringify!($val), &tmp)
+                    file!(), line!(), stringify!($val), &tmp);
+                tmp
             }
         }
     };
