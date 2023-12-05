@@ -42,7 +42,7 @@ impl Engine {
                         return Some((col as usize, r).into());
                     }
                 }
-                return None;
+                None
             };
 
             if row > 0 {
