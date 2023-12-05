@@ -10,5 +10,5 @@ mod year2022;
 mod year2023;
 
 fn main() {
-    year2015::run();
+    year2023::run();
 }

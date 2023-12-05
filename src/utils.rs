@@ -5,6 +5,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::str::FromStr;
 
 use grid::Grid;
+use itertools::Itertools;
 
 pub fn load_file(filename: &str) -> String {
     fs::read_to_string("data/".to_string() + filename)
@@ -77,6 +78,12 @@ pub struct ParseError {
 }
 
 impl ParseError {
+    pub fn n() -> Self {
+        ParseError {
+            message: "Error while parsing stuff".into(),
+        }
+    }
+    
     pub fn new(message: &str) -> Self {
         ParseError {
             message: message.to_string(),
@@ -309,6 +316,16 @@ impl<T: Default> MyGrid<T> {
             && point.y >= 0
             && (point.x as usize) < self.cols()
             && (point.y as usize) < self.rows()
+    }
+}
+
+impl MyGrid<char> {
+    pub fn from_str(input: &str) -> Self {
+        let mut grid = Grid::new(0, 0);
+        input.lines().for_each(|line| {
+            grid.push_row(line.trim_end().chars().collect());
+        });
+        MyGrid(grid)
     }
 }
 
