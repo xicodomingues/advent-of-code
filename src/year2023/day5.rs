@@ -138,9 +138,8 @@ impl<'a> CompleteMap<'a> {
 
 #[test]
 fn test_inter() {
-    
     use indoc::indoc;
-    
+
     fn cm(src: u64, dest: u64, span: u64) -> MapPart {
         MapPart {
             source: src,
@@ -270,7 +269,14 @@ pub fn part1(input: &str) -> u64 {
 
 pub fn part2(input: &str) -> u64 {
     let almanac = Alamanac::parse(input);
-    let mut ranges = almanac.start.chunks(2).map(|v| Range {start: v[0], end: v[0] + v[1]}).collect_vec();
+    let mut ranges = almanac
+        .start
+        .chunks(2)
+        .map(|v| Range {
+            start: v[0],
+            end: v[0] + v[1],
+        })
+        .collect_vec();
     for map in almanac.maps {
         ranges = map.map_ranges(&ranges);
     }
