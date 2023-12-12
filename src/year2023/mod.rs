@@ -10,6 +10,7 @@ mod day4;
 mod day5;
 mod day6;
 mod day7;
+mod day8;
 
 macro_rules! run {
     ($day:ident) => {$crate::run_year!(2023, $day)};
@@ -23,8 +24,9 @@ pub fn all() {
     run!(day5);
     run!(day6);
     run!(day7);
+    run!(day8);
 }
 
 pub fn run() {
-    run!(day7);
+    run!(day8);
 }
