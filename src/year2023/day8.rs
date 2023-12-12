@@ -72,7 +72,7 @@ pub fn part2(input: &str) -> usize {
         .keys()
         .filter(|k| k.ends_with('A'))
         .map(|x| net.cycle_len(x, |x| x.ends_with('Z')))
-        .fold(1, |acc, x| lcm(acc, x))
+        .fold(1, lcm)
 }
 
 #[test]
