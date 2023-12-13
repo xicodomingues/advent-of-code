@@ -83,7 +83,7 @@ impl ParseError {
             message: "Error while parsing stuff".into(),
         }
     }
-    
+
     pub fn new(message: &str) -> Self {
         ParseError {
             message: message.to_string(),
@@ -320,6 +320,25 @@ impl<T: Default> MyGrid<T> {
             && (point.x as usize) < self.cols()
             && (point.y as usize) < self.rows()
     }
+
+    pub fn to_edge(&self, point: &Point, dir: Direction) -> Box<dyn Iterator<Item = &T> + '_> {
+        let c = point.x as usize;
+        let r = point.y as usize;
+        match dir {
+            Direction::Up => Box::new(self.iter_col(c).take(r).rev()),
+            Direction::Down => Box::new(self.iter_col(c).skip(r + 1)),
+            Direction::Left => Box::new(self.iter_row(r).take(c).rev()),
+            Direction::Right => Box::new(self.iter_row(r).skip(c + 1)),
+        }
+    }
+}
+
+impl<T: Eq> MyGrid<T> {
+    pub fn find(&self, c: T) -> Option<(usize, usize)> {
+        self.indexed_iter()
+            .find(|(_, x)| x == &&c)
+            .map(|(idx, _)| idx)
+    }
 }
 
 impl MyGrid<char> {
@@ -329,10 +348,6 @@ impl MyGrid<char> {
             grid.push_row(line.trim_end().chars().collect());
         });
         MyGrid(grid)
-    }
-
-    pub fn find(&self, c: char) -> Option<(usize, usize)> {
-        self.indexed_iter().find(|(_, x)| x == &&c).map(|(idx, _)| idx)
     }
 }
 
@@ -438,4 +453,27 @@ where
         }
         Ok(())
     }
+}
+
+#[test]
+fn test_my_grid() {
+    use indoc::indoc;
+    use Direction::*;
+
+    fn p(r: usize, c: usize) -> Point {
+        Point::from((r, c))
+    }
+
+    let grid = MyGrid::from_str(indoc! {"
+        .....
+        .F-7.
+        .|.|.
+        .L-J.
+        .....
+    "});
+
+    assert_eq!(grid.to_edge(&p(3, 1), Up).collect::<String>(), "|F.");
+    assert_eq!(grid.to_edge(&p(3, 0), Right).collect::<String>(), "L-J.");
+    assert_eq!(grid.to_edge(&p(1, 3), Down).collect::<String>(), "|J.");
+    assert_eq!(grid.to_edge(&p(1, 4), Left).collect::<String>(), "7-F.");
 }
