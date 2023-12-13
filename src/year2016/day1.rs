@@ -23,7 +23,7 @@ fn parse(input: &str) -> impl Iterator<Item = Turn> + '_ {
     })
 }
 
-pub fn part1(input: &str) -> isize {
+pub fn part1(input: &str) -> usize {
     let mut pos = Point::ZERO;
     let mut dir = Direction::Up;
     for Turn { r, n } in parse(input) {
@@ -33,7 +33,7 @@ pub fn part1(input: &str) -> isize {
     pos.manhathan_dist(&Point::ZERO)
 }
 
-pub fn part2(input: &str) -> isize {
+pub fn part2(input: &str) -> usize {
     let mut pos = Point::ZERO;
     let mut dir = Direction::Up;
     let mut visited = HashSet::<Point>::new();

@@ -91,7 +91,7 @@ impl Engine {
                 .collect()
         }
 
-        let grid = MyGrid::from_str(input);
+        let grid = MyGrid::parse(input);
         let numbers = enumerate(input.lines())
             .flat_map(|rows| extract_numbers(rows, &grid))
             .collect();

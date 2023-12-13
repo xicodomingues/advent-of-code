@@ -145,7 +145,7 @@ fn test_fns() {
     fn p(r: usize, c: usize) -> Point {
         Point::from((r, c))
     }
-    let grid = MyGrid::from_str(indoc! {"
+    let grid = MyGrid::parse(indoc! {"
         .....
         .F-7.
         .|.|.
@@ -162,13 +162,13 @@ fn test_fns() {
 }
 
 pub fn part1(input: &str) -> usize {
-    let grid = MyGrid::from_str(input);
+    let grid = MyGrid::parse(input);
     let start = Point::from(grid.find('S').unwrap());
     get_line_points(&grid, start).len() / 2
 }
 
 pub fn part2(input: &str) -> usize {
-    let mut grid = MyGrid::from_str(input);
+    let mut grid = MyGrid::parse(input);
     let start = Point::from(grid.find('S').unwrap());
     let points = get_line_points(&grid, start);
     grid[start] = find_connected(&grid, &start).1;

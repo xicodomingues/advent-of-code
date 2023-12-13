@@ -286,12 +286,12 @@ impl Point {
         self.move_in(dir, 1)
     }
 
-    pub fn square_dist(&self, other: &Point) -> isize {
-        max((self.x - other.x).abs(), (self.y - other.y).abs())
+    pub fn square_dist(&self, other: &Point) -> usize {
+        max((self.x - other.x).abs(), (self.y - other.y).abs()) as usize
     }
 
-    pub fn manhathan_dist(&self, other: &Point) -> isize {
-        (self.x - other.x).abs() + (self.y - other.y).abs()
+    pub fn manhathan_dist(&self, other: &Point) -> usize {
+        ((self.x - other.x).abs() + (self.y - other.y).abs()) as usize
     }
 }
 
@@ -339,15 +339,43 @@ impl<T: Eq> MyGrid<T> {
             .find(|(_, x)| x == &&c)
             .map(|(idx, _)| idx)
     }
+
+    pub fn find_all(&self, c: T) -> impl Iterator<Item = (usize, usize)> + '_ {
+        self.indexed_iter()
+            .filter(move |(_, x)| x == &&c)
+            .map(|(idx, _)| idx)
+    }
 }
 
 impl MyGrid<char> {
-    pub fn from_str(input: &str) -> Self {
+    pub fn parse(input: &str) -> Self {
         let mut grid = Grid::new(0, 0);
         input.lines().for_each(|line| {
             grid.push_row(line.trim_end().chars().collect());
         });
         MyGrid(grid)
+    }
+}
+
+impl MyGrid<u8> {
+    pub fn bparse(input: &str) -> Self {
+        let mut grid = Grid::new(0, 0);
+        input.lines().for_each(|line| {
+            grid.push_row(line.trim_end().bytes().collect());
+        });
+        MyGrid(grid)
+    }
+
+    pub fn bprint(&self) -> &Self {
+        println!();
+        for r in 0..self.rows() {
+            print!("{:3} ", r);
+            for c in 0..self.cols() {
+                print!("{}", self.0[(r, c)] as char)
+            }
+            println!();
+        }
+        self
     }
 }
 
@@ -428,7 +456,7 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f)?;
         for r in 0..self.rows() {
-            write!(f, "{} ", r)?;
+            write!(f, "{:3} ", r)?;
             for c in 0..self.cols() {
                 write!(f, "{:?}", self.0[(r, c)])?
             }
@@ -445,7 +473,7 @@ where
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f)?;
         for r in 0..self.rows() {
-            write!(f, "{} ", r)?;
+            write!(f, "{:3} ", r)?;
             for c in 0..self.cols() {
                 write!(f, "{}", self.0[(r, c)])?
             }
@@ -464,7 +492,7 @@ fn test_my_grid() {
         Point::from((r, c))
     }
 
-    let grid = MyGrid::from_str(indoc! {"
+    let grid = MyGrid::parse(indoc! {"
         .....
         .F-7.
         .|.|.
