@@ -137,28 +137,31 @@ pub struct Point {
 }
 
 impl From<(isize, isize)> for Point {
+    /// (x, y) or (c, r)
     fn from(value: (isize, isize)) -> Self {
         Point {
-            x: value.0,
-            y: value.1,
+            x: value.1,
+            y: value.0,
         }
     }
 }
 
 impl From<(i32, i32)> for Point {
+    /// (x, y) or (c, r)
     fn from(value: (i32, i32)) -> Self {
         Point {
-            x: value.0 as isize,
-            y: value.1 as isize,
+            x: value.1 as isize,
+            y: value.0 as isize,
         }
     }
 }
 
 impl From<(usize, usize)> for Point {
+    /// (x, y) or (c, r)
     fn from(value: (usize, usize)) -> Self {
         Point {
-            x: isize::try_from(value.0).unwrap(),
-            y: isize::try_from(value.1).unwrap(),
+            x: isize::try_from(value.1).unwrap(),
+            y: isize::try_from(value.0).unwrap(),
         }
     }
 }
@@ -327,6 +330,10 @@ impl MyGrid<char> {
         });
         MyGrid(grid)
     }
+
+    pub fn find(&self, c: char) -> Option<(usize, usize)> {
+        self.indexed_iter().find(|(_, x)| x == &&c).map(|(idx, _)| idx)
+    }
 }
 
 impl<T> Deref for MyGrid<T> {
@@ -353,6 +360,20 @@ impl<T> Index<Point> for MyGrid<T> {
 
 impl<T> IndexMut<Point> for MyGrid<T> {
     fn index_mut(&mut self, index: Point) -> &mut Self::Output {
+        &mut self.0[(index.y as usize, index.x as usize)]
+    }
+}
+
+impl<T> Index<&Point> for MyGrid<T> {
+    type Output = T;
+
+    fn index(&self, index: &Point) -> &Self::Output {
+        &self.0[(index.y as usize, index.x as usize)]
+    }
+}
+
+impl<T> IndexMut<&Point> for MyGrid<T> {
+    fn index_mut(&mut self, index: &Point) -> &mut Self::Output {
         &mut self.0[(index.y as usize, index.x as usize)]
     }
 }
@@ -395,6 +416,23 @@ where
             write!(f, "{} ", r)?;
             for c in 0..self.cols() {
                 write!(f, "{:?}", self.0[(r, c)])?
+            }
+            writeln!(f)?;
+        }
+        Ok(())
+    }
+}
+
+impl<T> core::fmt::Display for MyGrid<T>
+where
+    T: core::fmt::Display,
+{
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        writeln!(f)?;
+        for r in 0..self.rows() {
+            write!(f, "{} ", r)?;
+            for c in 0..self.cols() {
+                write!(f, "{}", self.0[(r, c)])?
             }
             writeln!(f)?;
         }

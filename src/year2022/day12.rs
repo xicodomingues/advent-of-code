@@ -28,11 +28,11 @@ fn parse(input: &str) -> Map {
         grid.push_row(line.chars().enumerate().map(|(c, char)| {
             match char {
                 'S' => {
-                    start = Some(Point::from((c, r)));
+                    start = Some(Point::from((r, c)));
                     1
                 }
                 'E' => {
-                    end = Some(Point::from((c, r)));
+                    end = Some(Point::from((r, c)));
                     26
                 }
                 'a'..='z' => char as u8 - b'a' + 1,

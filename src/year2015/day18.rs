@@ -60,7 +60,7 @@ impl Lights {
         let bla = iproduct!(0..self.height, 0..self.width)
             .collect_vec()
             .into_par_iter()
-            .map(|(r, c)| Point::from((c, r)))
+            .map(Point::from)
             .map(|point| {
                 let on_lights = point
                     .all_neighbors()

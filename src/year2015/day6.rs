@@ -24,7 +24,7 @@ impl FromStr for Coords {
         fn to_point(x: Match, y: Match) -> Option<Point> {
             let a = x.as_str().parse::<isize>().ok()?;
             let b = y.as_str().parse::<isize>().ok()?;
-            Some(Point::from((a, b)))
+            Some(Point::from((b, a)))
         }
 
         COORDS_REGEX
