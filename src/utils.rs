@@ -1,4 +1,6 @@
+use core::fmt::Display;
 use std::cmp::max;
+use std::fmt::Debug;
 use std::fs;
 use std::num::ParseIntError;
 use std::ops::{Deref, DerefMut, Index, IndexMut};
@@ -97,7 +99,7 @@ impl From<ParseIntError> for ParseError {
     }
 }
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Direction {
     Up,
     Down,
@@ -130,7 +132,44 @@ impl Direction {
     }
 }
 
-#[derive(Debug, Copy, Clone, Eq, Hash, PartialEq)]
+impl Into<usize> for Direction {
+    fn into(self) -> usize {
+        match self {
+            Direction::Up => 1,
+            Direction::Down => 2,
+            Direction::Left => 3,
+            Direction::Right => 4,
+        }
+    }
+}
+
+impl Display for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let repr = match self {
+            Direction::Up => '^',
+            Direction::Down => 'v',
+            Direction::Left => '<',
+            Direction::Right => '>',
+        };
+        write!(f, "{}", repr)?;
+        Ok(())
+    }
+}
+
+impl Debug for Direction {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        let repr = match self {
+            Direction::Up => '^',
+            Direction::Down => 'v',
+            Direction::Left => '<',
+            Direction::Right => '>',
+        };
+        write!(f, "{}", repr)?;
+        Ok(())
+    }
+}
+
+#[derive(Copy, Clone, Eq, Hash, PartialEq)]
 pub struct Point {
     pub(crate) x: isize,
     pub(crate) y: isize,
@@ -308,6 +347,20 @@ impl FromStr for Point {
     }
 }
 
+impl Display for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.y, self.x)?;
+        Ok(())
+    }
+}
+
+impl Debug for Point {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "({}, {})", self.y, self.x)?;
+        Ok(())
+    }
+}
+
 /// Structure that represents a grid of stuff.
 ///
 /// The top left corner is `(0, 0)` and bottom right is `(width, height)`
@@ -466,9 +519,9 @@ where
     }
 }
 
-impl<T> core::fmt::Display for MyGrid<T>
+impl<T> Display for MyGrid<T>
 where
-    T: core::fmt::Display,
+    T: Display,
 {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         writeln!(f)?;
