@@ -43,7 +43,7 @@ fn test_move() {
 impl Dish {
     fn parse(input: &str) -> Self {
         Self {
-            data: MyGrid::bparse(input),
+            data: MyGrid::parse(input, |x| x),
         }
     }
 

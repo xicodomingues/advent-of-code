@@ -1,7 +1,7 @@
 use crate::utils::MyGrid;
 
 fn parse(input: &str) -> impl Iterator<Item = MyGrid<u8>> + '_ {
-    input.split("\n\n").map(MyGrid::bparse)
+    input.split("\n\n").map(|entries| MyGrid::parse(entries, |x| x))
 }
 
 /// row 0 means that the relfection point is between row 0 and 1
@@ -68,7 +68,7 @@ fn find_reflection(grid: &mut MyGrid<u8>, is_reflection: fn(grid: &MyGrid<u8>, r
 #[test]
 fn test_reflect() {
     use indoc::indoc;
-    let mut grid = MyGrid::bparse(indoc! {"
+    let mut grid = MyGrid::parse(indoc! {"
         #...##..#
         #....#..#
         ..##..###
@@ -76,7 +76,7 @@ fn test_reflect() {
         #####.##.
         ..##..###
         #....#..#
-    "});
+    "}, |x| x);
     assert_eq!(find_reflection(&mut grid, is_reflection_part1), 400);
     assert_eq!(find_reflection(&mut grid, is_reflection_part2), 100);
 }

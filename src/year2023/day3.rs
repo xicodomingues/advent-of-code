@@ -77,8 +77,8 @@ impl Engine {
                     let gear_place = check_engajed(row, start, end, grid);
                     Gear {
                         value,
-                        gear: gear_place,
                         engajed: gear_place.is_some(),
+                        gear: gear_place,
                     }
                 })
                 .collect()
@@ -91,7 +91,7 @@ impl Engine {
                 .collect()
         }
 
-        let grid = MyGrid::parse(input);
+        let grid = MyGrid::cparse(input);
         let numbers = enumerate(input.lines())
             .flat_map(|rows| extract_numbers(rows, &grid))
             .collect();
@@ -119,7 +119,7 @@ pub fn part2(input: &str) -> usize {
         .numbers
         .iter()
         .filter(|x| x.engajed)
-        .into_grouping_map_by(|n| n.gear)
+        .into_grouping_map_by(|n| n.gear.clone())
         .collect::<Vec<_>>()
         .iter()
         .filter(|(_, v)| v.len() == 2)

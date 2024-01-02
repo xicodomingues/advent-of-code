@@ -4,7 +4,7 @@ use crate::utils::Point;
 
 fn navigate(chars: impl Iterator<Item=char>, positions: &mut HashSet<Point>) {
     let mut current_pos = Point::ZERO;
-    positions.insert(current_pos);
+    positions.insert(current_pos.clone());
 
     for c in chars {
         let new_pos = match c {
@@ -14,7 +14,7 @@ fn navigate(chars: impl Iterator<Item=char>, positions: &mut HashSet<Point>) {
             '<' => current_pos.left(),
             _ => panic!("This should not happen"),
         };
-        positions.insert(new_pos);
+        positions.insert(new_pos.clone());
         current_pos = new_pos;
     }
 }

@@ -37,7 +37,7 @@ pub fn part2(input: &str) -> usize {
     let mut pos = Point::ZERO;
     let mut dir = Direction::Up;
     let mut visited = HashSet::<Point>::new();
-    visited.insert(pos);
+    visited.insert(pos.clone());
     'outer: for Turn { r, n } in parse(input) {
         dir = dir.rotate(r);
         for _ in 0..n {
@@ -45,7 +45,7 @@ pub fn part2(input: &str) -> usize {
             if visited.contains(&pos) {
                 break 'outer;
             }
-            visited.insert(pos);
+            visited.insert(pos.clone());
         }
     }
     pos.manhathan_dist(&Point::ZERO)

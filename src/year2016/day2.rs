@@ -49,13 +49,13 @@ impl Keyboard {
     
     fn move_in(&mut self, dir: &Direction) {
         let new_pos = self.pos.move1(dir);
-        if self.grid.contains(&new_pos) && self.grid[new_pos] != '0' {
+        if self.grid.contains(&new_pos) && self.grid[&new_pos] != '0' {
             self.pos = new_pos;
         }
     }
     
     fn get_current_number(&self) -> char {
-        match self.grid[self.pos] {
+        match self.grid[&self.pos] {
             it @ '1'..='9' => it,
             it @ 'A'..='D' => it,
             it => panic!("{} is not a valid entry in the keypad", it),

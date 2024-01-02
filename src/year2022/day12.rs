@@ -49,12 +49,12 @@ fn parse(input: &str) -> Map {
     }
 }
 
-fn get_neighbours(coord: Point, map: &Map) -> impl Iterator<Item=Point> + '_ {
+fn get_neighbours<'a>(coord: &Point, map: &'a Map) -> impl Iterator<Item=Point> + 'a {
     coord.neighbors().into_iter()
         .filter(|points| map.contains(points))
 }
 
-fn can_move(map: &Map, current: Point, next: Point) -> bool {
+fn can_move(map: &Map, current: &Point, next: &Point) -> bool {
     let from = map.content[current];
     let to = map.content[next];
     from <= to + 1
@@ -63,14 +63,14 @@ fn can_move(map: &Map, current: Point, next: Point) -> bool {
 fn get_cost_map(map: &Map) -> MyGrid<u16> {
     let mut cost: MyGrid<u16> = MyGrid(Grid::init(map.height, map.width, u16::MAX));
     let mut to_analyze = VecDeque::new();
-    to_analyze.push_back((map.end, 0));
-    cost[map.end] = 0;
+    to_analyze.push_back((map.end.clone(), 0));
+    cost[&map.end] = 0;
 
     while let Some((next, current_cost)) = to_analyze.pop_front() {
-        get_neighbours(next, map).for_each(|point| {
+        get_neighbours(&next, map).for_each(|point| {
             let new_cost = current_cost + 1;
-            if can_move(map, next, point) && new_cost < cost[point] {
-                cost[point] = new_cost;
+            if can_move(map, &next, &point) && new_cost < cost[&point] {
+                cost[&point] = new_cost;
                 to_analyze.push_back((point, new_cost));
             }
         })
@@ -81,7 +81,7 @@ fn get_cost_map(map: &Map) -> MyGrid<u16> {
 pub fn part1(input: &str) -> u16 {
     let map = parse(input);
     let cost = get_cost_map(&map);
-    cost[map.start]
+    cost[&map.start]
 }
 
 pub fn part2(input: &str) -> u16 {

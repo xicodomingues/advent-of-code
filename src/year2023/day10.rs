@@ -58,27 +58,27 @@ fn find_connected(grid: &MyGrid<char>, point: &Point) -> ((Point, Point), char) 
     let mut res = vec![];
     let left = point.left();
     let mut dirs = vec![];
-    if grid.contains(&left) && "-FL".contains(grid[left]) {
+    if grid.contains(&left) && "-FL".contains(grid[&left]) {
         res.push(left);
         dirs.push(Direction::Left);
     }
     let right = point.right();
-    if grid.contains(&right) && "-7J".contains(grid[right]) {
+    if grid.contains(&right) && "-7J".contains(grid[&right]) {
         res.push(right);
         dirs.push(Direction::Right);
     }
     let up = point.up();
-    if grid.contains(&up) && "|F7".contains(grid[up]) {
+    if grid.contains(&up) && "|F7".contains(grid[&up]) {
         res.push(up);
         dirs.push(Direction::Up);
     }
     let down = point.down();
-    if grid.contains(&down) && "|LJ".contains(grid[down]) {
+    if grid.contains(&down) && "|LJ".contains(grid[&down]) {
         res.push(down);
         dirs.push(Direction::Down);
     }
     assert!(res.len() == 2);
-    let points = (res[0], res[1]);
+    let points = (res[0].clone(), res[1].clone());
     let new_char = match (dirs[0], dirs[1]) {
         (Direction::Left, Direction::Right) => '-',
         (Direction::Up, Direction::Down) => '|',
@@ -91,11 +91,11 @@ fn find_connected(grid: &MyGrid<char>, point: &Point) -> ((Point, Point), char) 
     (points, new_char)
 }
 
-fn get_line_points(grid: &MyGrid<char>, point: Point) -> HashSet<Point> {
-    let mut prev_p1 = point;
-    let ((mut p1, _), _) = find_connected(grid, &point);
+fn get_line_points(grid: &MyGrid<char>, point: &Point) -> HashSet<Point> {
+    let mut prev_p1 = point.clone();
+    let ((mut p1, _), _) = find_connected(grid, point);
     let mut res = HashSet::new();
-    while p1 != point {
+    while p1 != *point {
         let n = next(grid, &p1, &prev_p1);
         res.insert(prev_p1);
         prev_p1 = p1;
@@ -145,7 +145,7 @@ fn test_fns() {
     fn p(r: usize, c: usize) -> Point {
         Point::from((r, c))
     }
-    let grid = MyGrid::parse(indoc! {"
+    let grid = MyGrid::cparse(indoc! {"
         .....
         .F-7.
         .|.|.
@@ -162,16 +162,16 @@ fn test_fns() {
 }
 
 pub fn part1(input: &str) -> usize {
-    let grid = MyGrid::parse(input);
+    let grid = MyGrid::cparse(input);
     let start = Point::from(grid.find('S').unwrap());
-    get_line_points(&grid, start).len() / 2
+    get_line_points(&grid, &start).len() / 2
 }
 
 pub fn part2(input: &str) -> usize {
-    let mut grid = MyGrid::parse(input);
+    let mut grid = MyGrid::cparse(input);
     let start = Point::from(grid.find('S').unwrap());
-    let points = get_line_points(&grid, start);
-    grid[start] = find_connected(&grid, &start).1;
+    let points = get_line_points(&grid, &start);
+    grid[&start] = find_connected(&grid, &start).1;
     clean_grid(&mut grid, &points);
     let points = grid.indexed_iter()
         .filter(|(p, _)| is_inside(&grid, *p))

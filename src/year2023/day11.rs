@@ -26,7 +26,7 @@ impl Universe {
                 })
                 .collect()
         }
-        let grid = MyGrid::bparse(input);
+        let grid = MyGrid::parse(input, |x| x);
         let expand_cols = get_empty(grid.iter_cols());
         let expand_rows = get_empty(grid.iter_rows());
         Self {

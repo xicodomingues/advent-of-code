@@ -64,28 +64,29 @@ impl<'a> Iterator for SeqIter<'a> {
     type Item = Point;
 
     fn next(&mut self) -> Option<Self::Item> {
-        if self.others.len() == 1 && self.curr == Some(self.others[0]) {
+        if self.others.len() == 1 && self.curr.as_ref().is_some_and(|x| *x == self.others[0]) {
             return None;
         }
-        match self.curr {
+        match &self.curr {
             None => {
-                self.curr = Some(self.others[0]);
+                self.curr = Some(self.others[0].clone());
                 self.others = &self.others[1..];
-                self.curr
+                self.curr.clone()
             }
             Some(p) => {
-                let mut o = self.others[0];
-                if self.curr == Some(o) {
+                if *p == self.others[0] {
                     self.others = &self.others[1..];
-                    o = self.others[0];
                 }
+                let o = self.others[0].clone();
                 let dx = p.x - o.x;
                 let dy = p.y - o.y;
-                if dx > 0 { self.curr = Some(p.left()); }
-                if dx < 0 { self.curr = Some(p.right()); }
-                if dy > 0 { self.curr = Some(p.up()); }
-                if dy < 0 { self.curr = Some(p.down()); }
-                self.curr
+                let mut new_curr = None;
+                if dx > 0 { new_curr = Some(p.left()); }
+                if dx < 0 { new_curr = Some(p.right()); }
+                if dy > 0 { new_curr = Some(p.up()); }
+                if dy < 0 { new_curr = Some(p.down()); }
+                self.curr = new_curr.clone();
+                new_curr
             }
         }
     }
@@ -170,7 +171,7 @@ impl SandPit {
     }
 
     fn add_rocks(&mut self, seq: &Sequence) {
-        seq.iter_pos().for_each(|p| self.grid[p] = Content::Rock)
+        seq.iter_pos().for_each(|p| self.grid[&p] = Content::Rock)
     }
 
     fn out_of_bounds(&self, pos: &Point) -> bool {
@@ -179,23 +180,23 @@ impl SandPit {
 
     fn drop_sand(&mut self) -> bool {
         let mut pos = Point::new(500, 0);
-        if self.grid[pos] == Content::Sand {
+        if self.grid[&pos] == Content::Sand {
             return false;
         }
         loop {
             let down = pos.down();
-            match self.grid[down] {
+            match self.grid[&down] {
                 Content::Air => { pos = down }
                 _ => {
                     let down_left = pos.down_left();
-                    match self.grid[down_left] {
+                    match self.grid[&down_left] {
                         Content::Air => { pos = down_left }
                         _ => {
                             let down_right = pos.down_right();
-                            match self.grid[down_right] {
+                            match self.grid[&down_right] {
                                 Content::Air => { pos = down_right }
                                 _ => {
-                                    self.grid[pos] = Content::Sand;
+                                    self.grid[&pos] = Content::Sand;
                                     return true;
                                 }
                             }

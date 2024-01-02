@@ -66,10 +66,10 @@ impl Lights {
                     .all_neighbors()
                     .into_iter()
                     .filter(|p| self.grid.contains(p))
-                    .map(|p| self.grid[p])
+                    .map(|p| self.grid[&p])
                     .filter(|l| *l == Light::On)
                     .count();
-                match self.grid[point] {
+                match self.grid[&point] {
                     Light::Off => {
                         if on_lights == 3 {
                             Light::On

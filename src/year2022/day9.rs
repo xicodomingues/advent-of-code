@@ -28,9 +28,9 @@ fn parse(input: &str) -> impl Iterator<Item = (Direction, u8)> + '_ {
 
 fn move_node(new: &Point, tail: &Point) -> Point {
     if new.square_dist(tail) <= 1 {
-        return *tail;
+        return tail.clone();
     }
-    let mut res = *new;
+    let mut res = new.clone();
     res.x += match new.x - tail.x {
         2 => -1,
         -2 => 1,
@@ -67,7 +67,7 @@ pub fn solve(input: &str, rope_size: usize) -> u64 {
                 Right => rope[0].right(),
             };
             rope = update_propagation(&rope, new_head);
-            all_tail_positions.insert(rope[rope_size - 1]);
+            all_tail_positions.insert(rope[rope_size - 1].clone());
         }
     });
     all_tail_positions.len() as u64

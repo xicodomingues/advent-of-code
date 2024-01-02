@@ -7,6 +7,7 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::str::FromStr;
 
 use grid::Grid;
+use itertools::Itertools;
 
 pub fn load_file(filename: &str) -> String {
     fs::read_to_string("data/".to_string() + filename)
@@ -169,7 +170,7 @@ impl Debug for Direction {
     }
 }
 
-#[derive(Copy, Clone, Eq, Hash, PartialEq)]
+#[derive(Clone, Eq, Hash, PartialEq)]
 pub struct Point {
     pub(crate) x: isize,
     pub(crate) y: isize,
@@ -400,8 +401,18 @@ impl<T: Eq> MyGrid<T> {
     }
 }
 
+impl<T: Default> MyGrid<T> {
+    pub fn parse(input: &str, mapper: fn(u8) -> T) -> Self {
+        let mut grid = Grid::<T>::new(0, 0);
+        input.lines().for_each(|line| {
+            grid.push_row(line.trim_end().bytes().map(mapper).collect());
+        });
+        MyGrid(grid)
+    }
+}
+
 impl MyGrid<char> {
-    pub fn parse(input: &str) -> Self {
+    pub fn cparse(input: &str) -> Self {
         let mut grid = Grid::new(0, 0);
         input.lines().for_each(|line| {
             grid.push_row(line.trim_end().chars().collect());
@@ -411,14 +422,6 @@ impl MyGrid<char> {
 }
 
 impl MyGrid<u8> {
-    pub fn bparse(input: &str) -> Self {
-        let mut grid = Grid::new(0, 0);
-        input.lines().for_each(|line| {
-            grid.push_row(line.trim_end().bytes().collect());
-        });
-        MyGrid(grid)
-    }
-
     pub fn bprint(&self) -> &Self {
         println!();
         for r in 0..self.rows() {
@@ -443,20 +446,6 @@ impl<T> Deref for MyGrid<T> {
 impl<T> DerefMut for MyGrid<T> {
     fn deref_mut(&mut self) -> &mut Self::Target {
         &mut self.0
-    }
-}
-
-impl<T> Index<Point> for MyGrid<T> {
-    type Output = T;
-
-    fn index(&self, index: Point) -> &Self::Output {
-        &self.0[(index.y as usize, index.x as usize)]
-    }
-}
-
-impl<T> IndexMut<Point> for MyGrid<T> {
-    fn index_mut(&mut self, index: Point) -> &mut Self::Output {
-        &mut self.0[(index.y as usize, index.x as usize)]
     }
 }
 
@@ -545,7 +534,7 @@ fn test_my_grid() {
         Point::from((r, c))
     }
 
-    let grid = MyGrid::parse(indoc! {"
+    let grid = MyGrid::cparse(indoc! {"
         .....
         .F-7.
         .|.|.
