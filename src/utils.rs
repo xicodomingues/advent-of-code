@@ -7,7 +7,6 @@ use std::ops::{Deref, DerefMut, Index, IndexMut};
 use std::str::FromStr;
 
 use grid::Grid;
-use itertools::Itertools;
 
 pub fn load_file(filename: &str) -> String {
     fs::read_to_string("data/".to_string() + filename)
