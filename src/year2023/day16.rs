@@ -40,7 +40,7 @@ fn calculate_interception(c: u8, (pos, dir): Beam) -> impl Iterator<Item = Beam>
     }
 }
 
-fn shine_from<'a>(grid: &MyGrid<u8>, beam: Beam, visited: &mut MyGrid<BitSet>) -> usize {
+fn shine_from(grid: &MyGrid<u8>, beam: Beam, visited: &mut MyGrid<BitSet>) -> usize {
     let mut beams = vec![beam];
 
     'outer: while let Some(beam) = beams.pop() {
@@ -73,13 +73,13 @@ fn p(r: isize, c: isize) -> Point {
 }
 
 pub fn part1(input: &str) -> usize {
-    let mut grid = MyGrid::parse(input, |x| x);
+    let grid = MyGrid::parse(input, |x| x);
     let mut visited = MyGrid(Grid::from_vec(
         vec![BitSet::new(); grid.cols() * grid.rows()],
         grid.cols(),
     ));
 
-    shine_from(&mut grid, (p(0, 0), Right), &mut visited)
+    shine_from(&grid, (p(0, 0), Right), &mut visited)
 }
 
 pub fn part2(input: &str) -> usize {
@@ -106,7 +106,7 @@ pub fn part2(input: &str) -> usize {
         .par_iter()
         .map(|beam| {
             shine_from(
-                &mut MyGrid(grid.0.clone()),
+                &MyGrid(grid.0.clone()),
                 beam.clone(),
                 &mut MyGrid(visited.0.clone()),
             )

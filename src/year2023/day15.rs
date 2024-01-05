@@ -34,11 +34,8 @@ impl<'a> Boxes<'a> {
     fn remove(&mut self, id: &'a str) {
         let h = hash(id);
         let entry = self.0[h as usize].iter().position(|x| x.0 == id);
-        match entry {
-            Some(pos) => {
-                self.0[h as usize].remove(pos);
-            }
-            None => {}
+        if let Some(pos) = entry {
+            self.0[h as usize].remove(pos);
         }
     }
 

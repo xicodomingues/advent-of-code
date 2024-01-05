@@ -132,17 +132,6 @@ impl Direction {
     }
 }
 
-impl Into<usize> for Direction {
-    fn into(self) -> usize {
-        match self {
-            Direction::Up => 1,
-            Direction::Down => 2,
-            Direction::Left => 3,
-            Direction::Right => 4,
-        }
-    }
-}
-
 impl Display for Direction {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         let repr = match self {
@@ -321,8 +310,15 @@ impl Point {
         }
     }
 
+    #[inline(always)]
     pub fn move1(&self, dir: &Direction) -> Self {
-        self.move_in(dir, 1)
+        let Point { x, y } = self;
+        match dir {
+            Direction::Up => Self { x: *x, y: y - 1 },
+            Direction::Down => Self { x: *x, y: y + 1 },
+            Direction::Left => Self { x: x - 1, y: *y },
+            Direction::Right => Self { x: x + 1, y: *y },
+        }
     }
 
     pub fn square_dist(&self, other: &Point) -> usize {
